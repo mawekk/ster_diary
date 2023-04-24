@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">STERDiary</string>
+
+    <string name="archive">Архив</string>
+    <string name="statistics">Статистика</string>
+    <string name="settings">Настройки</string>
+    <string name="new_note">Новая запись</string>
+    <string name="edit_note">Изменение записи</string>
+
+    <string name="theme">ТЕМА</string>
+    <string name="theme_system">Системная</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="structure">СТРУКТУРА ЗАПИСИ</string>
+    <string name="discomfort_level">Уровень дискомфорта</string>
+    <string name="emotion_evaluation">Оценка эмоций в процентах</string>
+    <string name="feelings">Ощущения</string>
+    <string name="actions">Предпринятые действия</string>
+    <string name="answer">Рациональный ответ</string>
+    <string name="pin_code">PIN-КОД</string>
+    <string name="protect">Защитить дневник</string>
+    <string name="export">ЭКСПОРТ</string>
+    <string name="export_notes">Экспортировать записи</string>
+
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+    <string name="situation">Ситуация</string>
+    <string name="discomfort_before">Уровень дискомфорта до записи</string>
+    <string name="thoughts">Мысли</string>
+    <string name="emotions">Эмоции</string>
+    <string name="distortions">Когнитивные искажения</string>
+    <string name="discomfort_after">Уровень дискомфорта после записи</string>
+
+</resources>

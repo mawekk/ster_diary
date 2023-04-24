@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    tools:context=".fragments.NoteFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:hint="@string/date"
+                android:textColorHint="@color/dark_blue"
+                app:boxStrokeColor="@color/dark_blue"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/dark_blue"
+                app:placeholderTextColor="@color/dark_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/dark_blue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:hint="@string/time"
+                android:textColorHint="@color/dark_blue"
+                app:boxStrokeColor="@color/dark_blue"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/dark_blue"
+                app:placeholderTextColor="@color/dark_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/dark_blue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:hint="@string/situation"
+                android:textColorHint="@color/dark_blue"
+                app:boxStrokeColor="@color/dark_blue"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/dark_blue"
+                app:placeholderTextColor="@color/dark_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/dark_blue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/discomfort_before"
+                android:textColor="@color/dark_blue"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/seekBarBefore"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:progressTint="@color/green"
+                    android:thumbTint="@color/green" />
+
+                <TextView
+                    android:id="@+id/percentsBefore"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/dark_blue" />
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:hint="@string/thoughts"
+                android:textColorHint="@color/dark_blue"
+                app:boxStrokeColor="@color/dark_blue"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/dark_blue"
+                app:placeholderTextColor="@color/dark_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/dark_blue" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/emotions"
+                android:textColor="@color/dark_blue"
+                android:textSize="16sp" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                app:columnCount="4">
+
+                <Button
+                    android:id="@+id/buttonEmotions"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:backgroundTint="@color/gray"
+                    android:text="Выбрать"
+                    app:layout_column="0"
+                    app:layout_row="0" />
+            </androidx.gridlayout.widget.GridLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:hint="@string/feelings"
+                android:textColorHint="@color/dark_blue"
+                app:boxStrokeColor="@color/dark_blue"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/dark_blue"
+                app:placeholderTextColor="@color/dark_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/dark_blue" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:hint="@string/actions"
+                android:textColorHint="@color/dark_blue"
+                app:boxStrokeColor="@color/dark_blue"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/dark_blue"
+                app:placeholderTextColor="@color/dark_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/dark_blue" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif"
+                android:text="@string/distortions"
+                android:textColor="@color/dark_blue"
+                android:textSize="16sp" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                app:columnCount="4">
+
+                <Button
+                    android:id="@+id/buttonDistortions"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:backgroundTint="@color/gray"
+                    android:text="Выбрать"
+                    app:layout_column="0"
+                    app:layout_row="0" />
+            </androidx.gridlayout.widget.GridLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:hint="@string/answer"
+                android:textColorHint="@color/dark_blue"
+                app:boxStrokeColor="@color/dark_blue"
+                app:hintAnimationEnabled="true"
+                app:hintTextColor="@color/dark_blue"
+                app:placeholderTextColor="@color/dark_blue">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="sans-serif"
+                    android:textColor="@color/dark_blue"
+                    android:textColorHint="@color/dark_blue" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif"
+                android:text="@string/discomfort_after"
+                android:textColor="@color/dark_blue"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/seekBarAfter"
+                    android:layout_width="240dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:progressTint="@color/green"
+                    android:thumbTint="@color/green" />
+
+                <TextView
+                    android:id="@+id/percentsAfter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/dark_blue" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</FrameLayout>
