@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="4dp">
 
 
@@ -13,12 +13,7 @@
         android:layout_margin="8dp"
         app:cardCornerRadius="16dp"
         app:cardUseCompatPadding="false"
-        app:contentPadding="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:contentPadding="6dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,14 +25,13 @@
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                tools:text="TextView" />
 
             <TextView
                 android:id="@+id/situation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                tools:text="TextView" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
