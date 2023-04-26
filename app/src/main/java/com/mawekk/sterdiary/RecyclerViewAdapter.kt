@@ -7,8 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mawekk.sterdiary.databinding.NoteBinding
 
 class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
-    val note = Note("meow", "kek")
-    val notes = arrayListOf(note, note, note, note, note, note, note, note, note, note, note, note)
+    val notes = arrayListOf(
+        Note("meow", "kek"),
+        Note("meow", "kek"),
+        Note("meow", "kek")
+    )
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = NoteBinding.bind(itemView)
