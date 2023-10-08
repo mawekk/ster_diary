@@ -13,7 +13,7 @@
     <string name="theme_dark">Тёмная</string>
     <string name="structure">СТРУКТУРА ЗАПИСИ</string>
     <string name="discomfort_level">Уровень дискомфорта</string>
-    <string name="emotion_evaluation">Оценка эмоций в процентах</string>
+    <string name="emotion_list">Редактировать список эмоций</string>
     <string name="feelings">Ощущения</string>
     <string name="actions">Предпринятые действия</string>
     <string name="answer">Рациональный ответ</string>
@@ -30,5 +30,8 @@
     <string name="emotions">Эмоции</string>
     <string name="distortions">Когнитивные искажения</string>
     <string name="discomfort_after">Уровень дискомфорта после записи</string>
+    <string name="add">Добавить</string>
+
+    <string name="new_emotion">Добавить эмоцию</string>
 
 </resources>

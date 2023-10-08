@@ -5,16 +5,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mawekk.sterdiary.databinding.NoteBinding
+import com.mawekk.sterdiary.db.Note
 
-class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
-    val notes = arrayListOf(
-        Note("meow", "kek"),
-        Note("meow", "kek"),
-        Note("meow", "kek")
-    )
+class NoteAdapter : RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
+    var notes = emptyList<Note>()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = NoteBinding.bind(itemView)
+        fun bind(note: Note) {
+            binding.apply {
+                date.text = note.date
+                situation.text = note.situation
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,7 +28,12 @@ class RecyclerViewAdapter : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>
     override fun getItemCount() = notes.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.binding.date.text = notes[position].date
-        holder.binding.situation.text = notes[position].situation
+        holder.bind(notes[position])
     }
+
+    fun setList(list: List<Note>) {
+        notes = list
+        notifyDataSetChanged()
+    }
+
 }

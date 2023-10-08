@@ -20,10 +20,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         showFragment(ArchiveFragment.newInstance())
+        setBottomBarNavigation(binding)
+        setTopBarNavigation(binding)
+    }
+
+
+    private fun showFragment(fragment: Fragment): Boolean {
+        supportFragmentManager.beginTransaction().replace(R.id.place_holder, fragment).commit()
+        return true
+    }
+
+    private fun setTopBarNavigation(binding: ActivityMainBinding) {
         binding.apply {
             topAppBar.setNavigationOnClickListener {
                 showFragment(SettingsFragment.newInstance())
@@ -34,20 +44,24 @@ class MainActivity : AppCompatActivity() {
             topAppBar.setOnMenuItemClickListener {
                 showFragment(SearchFragment.newInstance())
             }
+        }
+    }
+
+
+    private fun setBottomBarNavigation(binding: ActivityMainBinding) {
+        binding.apply {
             bottomNavigation.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.archive_item -> showFragment(ArchiveFragment.newInstance())
-                    R.id.plus_item -> showFragment(NoteFragment.newInstance())
+                    R.id.plus_item -> {
+                        topAppBar.isVisible = false
+                        showFragment(NoteFragment.newInstance())
+                    }
                     R.id.statistics_item -> showFragment(StatisticsFragment.newInstance())
                     else -> false
                 }
             }
+            addNoteButton.setOnClickListener { showFragment(NewNoteFragment.newInstance()) }
         }
-
-    }
-
-    private fun showFragment(fragment: Fragment): Boolean {
-        supportFragmentManager.beginTransaction().replace(R.id.place_holder, fragment).commit()
-        return true
     }
 }
