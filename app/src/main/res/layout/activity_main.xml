@@ -11,7 +11,7 @@
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton"
+        android:id="@+id/addNoteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -24,7 +24,9 @@
         app:layout_constraintTop_toTopOf="@+id/appBarLayout"
         app:layout_constraintVertical_bias="0.98"
         app:srcCompat="@drawable/ic_plus"
-        app:tint="@color/dark_blue" />
+        app:tint="@color/dark_blue"
+        tools:ignore="ImageContrastCheck"
+        android:focusable="true" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

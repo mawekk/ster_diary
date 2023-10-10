@@ -18,6 +18,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/situationText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -73,6 +74,7 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/thoughtsText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -107,24 +109,11 @@
                 android:textSize="16sp" />
 
             <androidx.gridlayout.widget.GridLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                app:columnCount="4">
-
-                <Button
-                    android:id="@+id/buttonEmotions"
-                    style="@style/Widget.Material3.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:backgroundTint="@color/gray"
-                    android:text="Выбрать"
-                    app:layout_column="0"
-                    app:layout_row="0" />
-            </androidx.gridlayout.widget.GridLayout>
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/feelingsText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -149,6 +138,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/actionsText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -183,26 +173,20 @@
                 android:textColor="@color/dark_blue"
                 android:textSize="16sp" />
 
-            <androidx.gridlayout.widget.GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                app:columnCount="4">
 
-                <Button
-                    android:id="@+id/buttonDistortions"
-                    style="@style/Widget.Material3.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:backgroundTint="@color/gray"
-                    android:text="Выбрать"
-                    app:layout_column="0"
-                    app:layout_row="0" />
-            </androidx.gridlayout.widget.GridLayout>
+            <TextView
+                android:id="@+id/distortionsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif"
+                android:text="@string/distortions"
+                android:textColor="@color/dark_blue"
+                android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/answerText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -254,9 +238,8 @@
 
                 <TextView
                     android:id="@+id/percentsAfter"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:textColor="@color/dark_blue" />
             </LinearLayout>
 

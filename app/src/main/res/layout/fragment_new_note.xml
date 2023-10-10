@@ -29,8 +29,11 @@
                 app:placeholderTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/dateText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:editable="false"
+                    android:focusable="false"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/dark_blue"
                     android:textColorHint="@color/dark_blue" />
@@ -48,8 +51,11 @@
                 app:placeholderTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/timeText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:editable="false"
+                    android:focusable="false"
                     android:fontFamily="sans-serif"
                     android:textColor="@color/dark_blue"
                     android:textColorHint="@color/dark_blue" />
@@ -91,7 +97,7 @@
 
                 <SeekBar
                     android:id="@+id/seekBarBefore"
-                    android:layout_width="240dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
@@ -136,23 +142,25 @@
                 android:textColor="@color/dark_blue"
                 android:textSize="16sp" />
 
-            <androidx.gridlayout.widget.GridLayout
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp">
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/addEmotionButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                app:columnCount="4">
-
-                <Button
-                    android:id="@+id/buttonEmotions"
-                    style="@style/Widget.Material3.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:backgroundTint="@color/gray"
-                    android:text="Выбрать"
-                    app:layout_column="0"
-                    app:layout_row="0" />
-            </androidx.gridlayout.widget.GridLayout>
+                android:layout_marginStart="8dp"
+                android:clickable="true"
+                android:contentDescription="@string/actions"
+                app:srcCompat="@drawable/ic_plus"
+                app:tint="@color/dark_blue"
+                app:backgroundTint="@color/green"
+                app:elevation="0dp"
+                app:fabCustomSize="48dp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -205,24 +213,161 @@
                 android:textColor="@color/dark_blue"
                 android:textSize="16sp" />
 
-            <androidx.gridlayout.widget.GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                app:columnCount="4">
+            <CheckBox
+                android:id="@+id/checkBox1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
 
-                <Button
-                    android:id="@+id/buttonDistortions"
-                    style="@style/Widget.Material3.Button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:backgroundTint="@color/gray"
-                    android:text="Выбрать"
-                    app:layout_column="0"
-                    app:layout_row="0" />
-            </androidx.gridlayout.widget.GridLayout>
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+
+            <CheckBox
+                android:id="@+id/checkBox4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+
+            <CheckBox
+                android:id="@+id/checkBox5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+            <CheckBox
+                android:id="@+id/checkBox6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+            <CheckBox
+                android:id="@+id/checkBox7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+            <CheckBox
+                android:id="@+id/checkBox8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+            <CheckBox
+                android:id="@+id/checkBox9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+            <CheckBox
+                android:id="@+id/checkBox10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+
+            <CheckBox
+                android:id="@+id/checkBox11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/checkbox_selector"
+                android:checked="false"
+                android:drawableStart="@android:color/transparent"
+                android:drawablePadding="8dp"
+                android:minHeight="48dp"
+                android:text="@string/discomfort_level"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -263,7 +408,7 @@
 
                 <SeekBar
                     android:id="@+id/seekBarAfter"
-                    android:layout_width="240dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"

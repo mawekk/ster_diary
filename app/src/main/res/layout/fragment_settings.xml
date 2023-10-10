@@ -92,20 +92,6 @@
                 android:theme="@style/CheckBox.Theme" />
 
             <CheckBox
-                android:id="@+id/checkBox2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/checkbox_selector"
-                android:checked="true"
-                android:drawableStart="@android:color/transparent"
-                android:drawablePadding="8dp"
-                android:minHeight="48dp"
-                android:text="@string/emotion_evaluation"
-                android:textColor="@color/dark_blue"
-                android:textSize="14sp"
-                android:theme="@style/CheckBox.Theme" />
-
-            <CheckBox
                 android:id="@+id/checkBox3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -146,6 +132,16 @@
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:contextClickable="true"
+                android:gravity="center_vertical"
+                android:text="@string/emotion_list"
+                android:textAlignment="viewStart"
+                android:textColor="@color/dark_blue" />
         </LinearLayout>
 
         <LinearLayout
@@ -167,10 +163,12 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:text="@string/protect"
                 android:textColor="@color/dark_blue"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:focusable="true" />
         </LinearLayout>
 
         <LinearLayout
@@ -192,10 +190,13 @@
                 android:id="@+id/textView7"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:clickable="true"
                 android:gravity="center_vertical"
                 android:text="@string/export_notes"
                 android:textColor="@color/dark_blue"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:focusable="true" />
+
         </LinearLayout>
 
     </LinearLayout>
