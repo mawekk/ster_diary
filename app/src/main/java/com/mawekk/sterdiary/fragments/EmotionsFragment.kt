@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.chip.Chip
+import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentEmotionsBinding
 import com.mawekk.sterdiary.db.Emotion
 
@@ -31,6 +32,7 @@ class EmotionsFragment : Fragment() {
         )
         list.forEach{
             val chip = Chip(context)
+            chip.setBackgroundColor(resources.getColor(R.color.green))
             chip.text = it.name
             binding.emotionsChipGroup.addView(chip)
         }

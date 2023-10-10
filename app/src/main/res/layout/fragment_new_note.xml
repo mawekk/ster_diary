@@ -97,7 +97,7 @@
 
                 <SeekBar
                     android:id="@+id/seekBarBefore"
-                    android:layout_width="240dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
@@ -156,7 +156,8 @@
                 android:layout_marginStart="8dp"
                 android:clickable="true"
                 android:contentDescription="@string/actions"
-                android:src="@drawable/ic_plus"
+                app:srcCompat="@drawable/ic_plus"
+                app:tint="@color/dark_blue"
                 app:backgroundTint="@color/green"
                 app:elevation="0dp"
                 app:fabCustomSize="48dp" />
@@ -407,7 +408,7 @@
 
                 <SeekBar
                     android:id="@+id/seekBarAfter"
-                    android:layout_width="240dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"

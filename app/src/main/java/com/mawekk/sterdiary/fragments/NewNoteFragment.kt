@@ -10,7 +10,10 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import android.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.MaterialToolbar
+import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
 import java.text.SimpleDateFormat
@@ -19,8 +22,8 @@ import java.text.SimpleDateFormat
 class NewNoteFragment : Fragment() {
     lateinit var binding: FragmentNewNoteBinding
     private val calendar = Calendar.getInstance()
-    private val dateFormat = SimpleDateFormat("dd.MM.yyyy")
-    private val timeFormat = SimpleDateFormat("hh:mm")
+    private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
+    private val timeFormat = SimpleDateFormat("HH:mm")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,12 +40,23 @@ class NewNoteFragment : Fragment() {
             }
             showSeekBarProgress(seekBarBefore, percentsBefore)
             showSeekBarProgress(seekBarAfter, percentsAfter)
-            addEmotionButton.setOnClickListener {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.place_holder, EmotionsFragment.newInstance()).commit()
-            }
+            percentsBefore.text = "0%"
+            percentsAfter.text = "0%"
+            setAddEmotionButton()
         }
         return binding.root
+    }
+
+    private fun setAddEmotionButton() {
+        binding.apply {
+            addEmotionButton.setOnClickListener {
+                (activity as MainActivity).findViewById<MaterialToolbar>(R.id.topAppBar).setTitle(R.string.emotions)
+                (activity as MainActivity).showFragment(
+                    EmotionsFragment.newInstance(),
+                    R.id.addEmotionButton
+                )
+            }
+        }
     }
 
 

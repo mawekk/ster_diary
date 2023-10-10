@@ -8,9 +8,9 @@ import androidx.room.Query
 @Dao
 interface NoteDao {
     @Insert
-    suspend fun insertNote(note: Note)
+    fun insertNote(note: Note)
     @Delete
-    suspend fun deleteNote(note: Note)
+    fun deleteNote(note: Note)
     @Query("SELECT * FROM notes_table")
     fun getAllNotes(): List<Note>
     @Query("SELECT * FROM notes_table WHERE id = :id")

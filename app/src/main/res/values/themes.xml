@@ -3,6 +3,8 @@
     <style name="Base.Theme.STERDiary" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="Theme.STERDiary" parent="Base.Theme.STERDiary" />
@@ -17,8 +19,9 @@
         <item name="colorControlActivated">@color/gray</item>
     </style>
 
-    <style name="Dialog_Theme" parent="ThemeOverlay.AppCompat.Dialog">
+    <style name="Dialog_Theme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/green</item>
+        <item name="colorControlNormal">@color/green</item>
         <item name="android:windowBackground">@color/white</item>
         <item name="android:colorControlActivated">@color/green</item>
         <item name="android:textColorPrimary">@color/dark_blue</item>
