@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialiconsoutlined/check_box/outline_check_box_24.xml" />
+                                      <entry key="url" value="file:$USER_HOME$/Library/Android/sdk/icons/material/materialicons/more_horiz/baseline_more_horiz_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -34,8 +34,8 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="7c8086" />
-                            <entry key="outputName" value="outline_check_box_24" />
-                            <entry key="sourceFile" value="C:\Users\mawek\AndroidStudioProjects\STERDiary" />
+                            <entry key="outputName" value="ic_more" />
+                            <entry key="sourceFile" value="/C:\Users\mawek\AndroidStudioProjects\STERDiary" />
                           </map>
                         </option>
                       </PersistentState>
