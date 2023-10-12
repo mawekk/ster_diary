@@ -1,5 +1,6 @@
 package com.mawekk.sterdiary.db
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.sql.Date
@@ -7,11 +8,10 @@ import java.sql.Time
 
 @Entity(tableName = "notes_table")
 data class Note(
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
-    var date: String,
-    var time: String,
-    var situation: String,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
+    @ColumnInfo(name = "date")var date: String,
+    @ColumnInfo(name = "time") var time: String,
+    @ColumnInfo(name = "situation")var situation: String,
     /*var discomfortBefore: Int,
     var thoughts: String,
     var emotions: List<String>,

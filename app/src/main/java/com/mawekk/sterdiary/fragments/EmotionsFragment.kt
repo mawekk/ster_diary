@@ -16,7 +16,7 @@ class EmotionsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentEmotionsBinding.inflate(inflater, container, false)
         init()
         return binding.root

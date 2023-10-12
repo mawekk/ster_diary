@@ -11,6 +11,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.MaterialToolbar
 import com.mawekk.sterdiary.MainActivity
@@ -50,7 +51,8 @@ class NewNoteFragment : Fragment() {
     private fun setAddEmotionButton() {
         binding.apply {
             addEmotionButton.setOnClickListener {
-                (activity as MainActivity).findViewById<MaterialToolbar>(R.id.topAppBar).setTitle(R.string.emotions)
+                (activity as MainActivity).findViewById<MaterialToolbar>(R.id.emotionsTopBar).isVisible = true
+                (activity as MainActivity).findViewById<MaterialToolbar>(R.id.newNoteTopBar).isVisible = false
                 (activity as MainActivity).showFragment(
                     EmotionsFragment.newInstance(),
                     R.id.addEmotionButton

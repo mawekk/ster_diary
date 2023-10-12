@@ -8,6 +8,10 @@
     <string name="new_note">Новая запись</string>
     <string name="edit_note">Изменение записи</string>
 
+    <string name="edit">Изменить</string>
+    <string name="delete">Удалить</string>
+    <string name="help">Помощь</string>
+
     <string name="theme">ТЕМА</string>
     <string name="theme_system">Системная</string>
     <string name="theme_light">Светлая</string>

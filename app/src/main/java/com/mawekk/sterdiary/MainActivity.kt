@@ -1,13 +1,15 @@
 package com.mawekk.sterdiary
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import com.google.android.material.appbar.MaterialToolbar
 import com.mawekk.sterdiary.databinding.ActivityMainBinding
 import com.mawekk.sterdiary.fragments.ArchiveFragment
 import com.mawekk.sterdiary.fragments.NewNoteFragment
@@ -16,6 +18,7 @@ import com.mawekk.sterdiary.fragments.SettingsFragment
 import com.mawekk.sterdiary.fragments.StatisticsFragment
 import java.util.Stack
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -24,29 +27,52 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        super.onCreateOptionsMenu(binding.noteTopBar.menu)
         setContentView(binding.root)
         showFragment(ArchiveFragment.newInstance(), R.id.archive_item)
         setBottomBarNavigation(binding)
         setTopBarNavigation(binding)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.note_top_bar, menu)
+        return true
+    }
+
     override fun onBackPressed() {
         super.onBackPressed()
         val id = idStack.pop()
         if (idStack.isNotEmpty()) {
-            binding.bottomNavigation.setOnItemSelectedListener(backListener)
-            binding.bottomNavigation.selectedItemId = idStack.peek()
-            binding.bottomNavigation.setOnItemSelectedListener(mainListener)
-            if (id == R.id.search_item || id == R.id.plus_item) {
-                showBottomNavigation()
-            }
-            else if (id == R.id.addEmotionButton) {
-                binding.topAppBar.setTitle(R.string.new_note)
+            when (id) {
+                R.id.archive_item, R.id.statistics_item -> {
+                    binding.bottomNavigation.setOnItemSelectedListener(backListenerBottom)
+                    binding.bottomNavigation.selectedItemId = idStack.peek()
+                    binding.bottomNavigation.setOnItemSelectedListener(mainListenerBottom)
+                }
+                R.id.search_item -> {
+                    binding.topAppBar.isVisible = true
+                    showBottomNavigation()
+                }
+                R.id.topAppBar -> {
+                    binding.topAppBar.isVisible = true
+                    binding.settingsTopBar.isVisible = false
+                    showBottomNavigation()}
+                R.id.plus_item -> {
+                    binding.topAppBar.isVisible = true
+                    binding.newNoteTopBar.isVisible = false
+                    showBottomNavigation()
+                }
+                R.id.addEmotionButton -> {
+                    binding.newNoteTopBar.isVisible = true
+                    binding.emotionsTopBar.isVisible = false
+                }
             }
         } else {
             finish()
         }
     }
+
 
     fun showFragment(fragment: Fragment, @IdRes buttonId: Int): Boolean {
         supportFragmentManager.commit {
@@ -74,30 +100,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setTopBarNavigation(binding: ActivityMainBinding) {
-        binding.apply {
-            topAppBar.setNavigationOnClickListener {
-                topAppBar.setTitle(R.string.settings)
-                hideBottomNavigation()
-                showFragment(SettingsFragment.newInstance(), R.id.search_item)
-            }
-            topAppBar.setOnMenuItemClickListener {
-                topAppBar.setTitle(R.string.search)
-                hideBottomNavigation()
-                showFragment(SearchFragment.newInstance(), R.id.search_item)
-            }
-        }
-    }
-
-    private val mainListener: (item: MenuItem) -> Boolean = {
+    private val mainListenerBottom: (item: MenuItem) -> Boolean = {
         when (it.itemId) {
             R.id.archive_item -> {
                 binding.topAppBar.setTitle(R.string.archive)
+                binding.topAppBar.isVisible = true
                 showFragment(ArchiveFragment.newInstance(), it.itemId)
             }
 
             R.id.statistics_item -> {
                 binding.topAppBar.setTitle(R.string.statistics)
+                binding.topAppBar.isVisible = true
                 showFragment(
                     StatisticsFragment.newInstance(),
                     it.itemId
@@ -108,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val backListener: (item: MenuItem) -> Boolean = {
+    private val backListenerBottom: (item: MenuItem) -> Boolean = {
         when (it.itemId) {
             R.id.archive_item -> {
                 binding.topAppBar.setTitle(R.string.archive)
@@ -126,14 +139,53 @@ class MainActivity : AppCompatActivity() {
 
     private fun setBottomBarNavigation(binding: ActivityMainBinding) {
         binding.apply {
-            bottomNavigation.setOnItemSelectedListener(mainListener)
+            bottomNavigation.setOnItemSelectedListener(mainListenerBottom)
             addNoteButton.setOnClickListener {
-                topAppBar.setTitle(R.string.new_note)
                 hideBottomNavigation()
+                topAppBar.isVisible = false
+                newNoteTopBar.isVisible = true
                 showFragment(
                     NewNoteFragment.newInstance(),
                     R.id.plus_item
                 )
+            }
+        }
+    }
+
+    private fun setTopBarNavigation(binding: ActivityMainBinding) {
+        binding.apply {
+            topAppBar.setNavigationOnClickListener {
+                hideBottomNavigation()
+                showFragment(SettingsFragment.newInstance(), R.id.topAppBar)
+                topAppBar.isVisible = false
+                settingsTopBar.isVisible = true
+            }
+            topAppBar.setOnMenuItemClickListener {
+                hideBottomNavigation()
+                showFragment(SearchFragment.newInstance(), R.id.search_item)
+                topAppBar.isVisible = false
+                true
+            }
+
+            settingsTopBar.setOnMenuItemClickListener {
+                onBackPressed()
+                true
+            }
+
+            newNoteTopBar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+            newNoteTopBar.setOnMenuItemClickListener {
+                onBackPressed()
+                true
+            }
+
+            emotionsTopBar.setNavigationOnClickListener {
+                onBackPressed()
+            }
+            emotionsTopBar.setOnMenuItemClickListener{
+                onBackPressed()
+                true
             }
         }
     }
