@@ -104,7 +104,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@color/white"
             android:minHeight="64dp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -9,15 +9,15 @@ import java.sql.Time
 @Entity(tableName = "notes_table")
 data class Note(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
-    @ColumnInfo(name = "date")var date: String,
+    @ColumnInfo(name = "date") var date: String,
     @ColumnInfo(name = "time") var time: String,
-    @ColumnInfo(name = "situation")var situation: String,
-    /*var discomfortBefore: Int,
-    var thoughts: String,
-    var emotions: List<String>,
-    var feelings: String,
-    var actions: String,
-    var distortions: List<String>,
-    var answer: String,
-    var discomfortAfter: Int*/
+    @ColumnInfo(name = "situation") var situation: String,
+    @ColumnInfo(name = "discomfort_before") var discomfortBefore: String,
+    @ColumnInfo(name = "thoughts") var thoughts: String,
+    //var emotions: List<String>,
+    @ColumnInfo(name = "feelings") var feelings: String,
+    @ColumnInfo(name = "actions") var actions: String,
+    //var distortions: List<String>,
+    @ColumnInfo(name = "answer") var answer: String,
+    @ColumnInfo(name = "discomfort_after") var discomfortAfter: String
 )

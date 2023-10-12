@@ -4,16 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mawekk.sterdiary.DiaryApp
+import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.NoteAdapter
+import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentArchiveBinding
 import com.mawekk.sterdiary.db.Note
+import com.mawekk.sterdiary.db.NoteViewModel
+
 
 class ArchiveFragment : Fragment() {
     lateinit var binding: FragmentArchiveBinding
-    private val noteAdapter = NoteAdapter()
+    private val viewModel: NoteViewModel by activityViewModels()
+    private val noteAdapter = NoteAdapter { note: Note -> noteOnClick(note) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,16 +28,27 @@ class ArchiveFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentArchiveBinding.inflate(inflater, container, false)
-        init()
+        initRecyclerView()
         return binding.root
     }
 
-    private fun init() {
+    private fun initRecyclerView() {
         binding.noteRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             adapter = noteAdapter
-            //(activity?.application as DiaryApp).db.noteDao().getAllNotes()
         }
+        viewModel.getAllNotes()
+            .observe(viewLifecycleOwner) { notes -> noteAdapter.setList(notes) }
+    }
+
+    private fun noteOnClick(note: Note) {
+        val activity = activity as MainActivity
+        activity.binding.apply {
+            topAppBar.isVisible = false
+            noteTopBar.isVisible = true
+        }
+        viewModel.selectNote(note)
+        activity.showFragment(NoteFragment.newInstance(), R.id.addNoteButton)
     }
 
     companion object {

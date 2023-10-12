@@ -12,6 +12,7 @@ class DiaryApp : Application() {
         db = Room.databaseBuilder(
             applicationContext,
             NoteDatabase::class.java, "diary-db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration().build()
     }
 }

@@ -18,7 +18,6 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/situationText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -34,6 +33,7 @@
                 app:suffixTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/situationText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -58,11 +58,13 @@
 
                 <SeekBar
                     android:id="@+id/seekBarBefore"
-                    android:layout_width="240dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
+                    android:clickable="false"
                     android:progressTint="@color/green"
+                    android:saveEnabled="false"
                     android:thumbTint="@color/green" />
 
                 <TextView
@@ -74,7 +76,6 @@
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/thoughtsText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -90,6 +91,7 @@
                 app:suffixTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/thoughtsText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -113,7 +115,6 @@
                 android:layout_height="match_parent"/>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/feelingsText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -129,6 +130,7 @@
                 app:suffixTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/feelingsText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -138,7 +140,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/actionsText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -154,6 +155,7 @@
                 app:suffixTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/actionsText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -186,7 +188,6 @@
                 android:textSize="16sp" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/answerText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp"
@@ -202,6 +203,7 @@
                 app:suffixTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/answerText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -229,11 +231,13 @@
 
                 <SeekBar
                     android:id="@+id/seekBarAfter"
-                    android:layout_width="240dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginBottom="8dp"
+                    android:clickable="false"
                     android:progressTint="@color/green"
+                    android:saveEnabled="false"
                     android:thumbTint="@color/green" />
 
                 <TextView

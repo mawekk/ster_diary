@@ -11,7 +11,7 @@ import com.mawekk.sterdiary.databinding.FragmentEmotionsBinding
 import com.mawekk.sterdiary.db.Emotion
 
 class EmotionsFragment : Fragment() {
-    lateinit var binding: FragmentEmotionsBinding
+    private lateinit var binding: FragmentEmotionsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
