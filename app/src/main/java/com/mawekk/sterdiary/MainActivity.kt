@@ -72,13 +72,22 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.addEmotionButton -> {
-                    binding.newNoteTopBar.isVisible = true
+                    if (idStack.peek() == R.id.plus_item)
+                        binding.newNoteTopBar.isVisible = true
+                    else
+                        binding.editNoteTopBar.isVisible = true
                     binding.emotionsTopBar.isVisible = false
                 }
 
                 R.id.addNoteButton -> {
                     binding.topAppBar.isVisible = true
                     binding.noteTopBar.isVisible = false
+                    showBottomNavigation()
+                }
+
+                R.id.edit -> {
+                    binding.noteTopBar.isVisible = true
+                    binding.editNoteTopBar.isVisible = false
                 }
             }
         } else {
@@ -97,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun hideBottomNavigation() {
+    fun hideBottomNavigation() {
         binding.apply {
             bottomNavigation.isVisible = false
             bottomShadow.isVisible = false

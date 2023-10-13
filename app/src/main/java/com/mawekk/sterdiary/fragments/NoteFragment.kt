@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
+import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNoteBinding
 import com.mawekk.sterdiary.db.notes.NoteViewModel
 
@@ -41,37 +43,69 @@ class NoteFragment : Fragment() {
 
     private fun setTopAppBarActions() {
         val activity = activity as MainActivity
-        activity.binding.noteTopBar.apply {
+        activity.binding.apply {
             viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
-                title = (note.time + ", " + note.date)
-            }
-            setNavigationOnClickListener {
-                isVisible = false
-                isVisible = true
-                activity.onBackPressed()
-            }
-            setOnMenuItemClickListener {
-                true
+                noteTopBar.title = (note.time + ", " + note.date)
+
+                noteTopBar.setNavigationOnClickListener {
+                    activity.onBackPressed()
+                }
+                noteTopBar.setOnMenuItemClickListener {
+                    when (it.itemId) {
+                        R.id.edit -> {
+                            editNoteTopBar.isVisible = true
+                            noteTopBar.isVisible = false
+                            activity.showFragment(EditNoteFragment.newInstance(), R.id.edit)
+                        }
+
+                        R.id.delete -> {
+                            editNoteTopBar.isVisible = false
+                            viewModel.deleteNote(note)
+                            activity.onBackPressed()
+                            true
+                        }
+
+                        R.id.help -> {
+                            activity.onBackPressed()
+                            true
+                        }
+                        else -> false
+                    }
+                }
             }
         }
     }
 
     private fun showNote() {
-        viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
+        viewModel.selectedNote.observe(viewLifecycleOwner) {
             binding.apply {
-                situationText.setText(note.situation)
-                thoughtsText.setText(note.thoughts)
-                feelingsText.setText(note.feelings)
-                actionsText.setText(note.actions)
-                answerText.setText(note.answer)
-                seekBarBefore.progress = note.discomfortBefore.dropLast(1).toInt()
-                seekBarAfter.progress = note.discomfortAfter.dropLast(1).toInt()
-                percentsBefore.text = note.discomfortBefore
-                percentsAfter.text = note.discomfortAfter
+                situationText.setText(it.situation)
+                thoughtsText.setText(it.thoughts)
+                feelingsText.setText(it.feelings)
+                actionsText.setText(it.actions)
+                answerText.setText(it.answer)
+                seekBarBefore.progress = it.discomfortBefore.dropLast(1).toInt()
+                seekBarAfter.progress = it.discomfortAfter.dropLast(1).toInt()
+                percentsBefore.text = it.discomfortBefore
+                percentsAfter.text = it.discomfortAfter
+                showEmotions()
             }
         }
     }
 
+    private fun showEmotions() {
+        viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
+            note.emotions.split(" ").forEach {
+                val chip = Chip(context)
+                chip.setChipBackgroundColorResource(R.color.light_gray)
+                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                chip.setTextAppearance(R.style.ChipTextAppearance)
+                chip.text = it
+                chip.isEnabled = false
+                binding.emotionsGroup.addView(chip)
+            }
+        }
+    }
 
     companion object {
         @JvmStatic

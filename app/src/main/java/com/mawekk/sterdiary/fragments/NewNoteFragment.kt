@@ -61,32 +61,6 @@ class NewNoteFragment : Fragment() {
         return binding.root
     }
 
-    private fun showDatePickerDialog() {
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val dateSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, month, day ->
-                calendar.set(Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, month)
-                calendar.set(Calendar.DAY_OF_MONTH, day)
-
-                binding.dateText.setText(dateFormat.format(calendar.time))
-            }
-
-        DatePickerDialog(
-            requireActivity(),
-            R.style.Dialog_Theme,
-            dateSetListener,
-            year,
-            month,
-            day
-        ).show()
-
-    }
-
-
     private fun showTimePickerDialog() {
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
@@ -109,6 +83,7 @@ class NewNoteFragment : Fragment() {
             .show()
     }
 
+
     private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
         seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onStopTrackingTouch(bar: SeekBar) {}
@@ -125,7 +100,7 @@ class NewNoteFragment : Fragment() {
     private fun showSelectedEmotions() {
         emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
             binding.selectedEmotions.removeAllViews()
-            emotions.forEach { it ->
+            emotions.forEach {
                 val chip = Chip(context)
                 chip.setChipBackgroundColorResource(R.color.light_gray)
                 chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
@@ -133,7 +108,7 @@ class NewNoteFragment : Fragment() {
                 chip.text = it.name
                 chip.isCloseIconVisible = true
 
-                chip.setOnCloseIconClickListener {chip ->
+                chip.setOnCloseIconClickListener { chip ->
                     binding.selectedEmotions.removeView(chip)
                     emotionViewModel.deselectEmotion(it)
                 }
@@ -159,6 +134,31 @@ class NewNoteFragment : Fragment() {
         }
     }
 
+    private fun showDatePickerDialog() {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { view, year, month, day ->
+                calendar.set(Calendar.YEAR, year)
+                calendar.set(Calendar.MONTH, month)
+                calendar.set(Calendar.DAY_OF_MONTH, day)
+
+                binding.dateText.setText(dateFormat.format(calendar.time))
+            }
+
+        DatePickerDialog(
+            requireActivity(),
+            R.style.Dialog_Theme,
+            dateSetListener,
+            year,
+            month,
+            day
+        ).show()
+
+    }
+
     private fun setTopAppBarActions() {
         val activity = activity as MainActivity
         activity.binding.newNoteTopBar.apply {
@@ -166,61 +166,33 @@ class NewNoteFragment : Fragment() {
                 activity.onBackPressed()
             }
             setOnMenuItemClickListener {
-                if (saveNote()) {
+                if (noteViewModel.saveNote(noteViewModel.parseNote(binding, parseEmotions()))) {
                     activity.onBackPressed()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Все поля должны быть заполнены",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
                 true
             }
         }
     }
 
-    private fun parseNote(): Note {
-        binding.apply {
-            val date = dateText.text.toString()
-            val time = timeText.text.toString()
-            val situation = situationText.text.toString()
-            val discomfortBefore = percentsBefore.text.toString()
-            val thoughts = thoughtsText.text.toString()
-            val feelings = feelingsText.text.toString()
-            val actions = actionsText.text.toString()
-            val answer = answerText.text.toString()
-            val discomfortAfter = percentsAfter.text.toString()
-
-            return Note(
-                0,
-                date,
-                time,
-                situation,
-                discomfortBefore,
-                thoughts,
-                feelings,
-                actions,
-                answer,
-                discomfortAfter
-            )
+    private fun parseEmotions(): String {
+        val emotions = mutableListOf<String>()
+        emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) {
+            it.forEach { emotion ->
+                emotions.add(
+                    emotion.name
+                )
+            }
         }
+        return emotions.joinToString(separator = " ")
     }
 
-    private fun saveNote(): Boolean {
-
-        val note = parseNote()
-
-        return if (checkNote(note)) {
-            noteViewModel.addNote(note)
-            true
-        } else {
-            Toast.makeText(requireContext(), "Все поля должны быть заполнены", Toast.LENGTH_SHORT)
-                .show()
-            false
-        }
-    }
-
-    private fun checkNote(note: Note): Boolean {
-        note.apply {
-            return (situation.isNotEmpty() && thoughts.isNotEmpty() && feelings.isNotEmpty()
-                    && actions.isNotEmpty() && answer.isNotEmpty())
-        }
-    }
 
     companion object {
         @JvmStatic

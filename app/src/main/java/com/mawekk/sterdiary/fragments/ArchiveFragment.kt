@@ -37,7 +37,7 @@ class ArchiveFragment : Fragment() {
             adapter = noteAdapter
         }
         viewModel.getAllNotes()
-            .observe(viewLifecycleOwner) { notes -> noteAdapter.setList(notes) }
+            .observe(viewLifecycleOwner) { noteAdapter.setList(it) }
     }
 
     private fun noteOnClick(note: Note) {
@@ -46,6 +46,7 @@ class ArchiveFragment : Fragment() {
             topAppBar.isVisible = false
             noteTopBar.isVisible = true
         }
+        activity.hideBottomNavigation()
         viewModel.selectNote(note)
         activity.showFragment(NoteFragment.newInstance(), R.id.addNoteButton)
     }

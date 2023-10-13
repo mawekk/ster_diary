@@ -10,8 +10,13 @@ import androidx.room.Query
 interface EmotionDao {
     @Insert
     suspend fun addEmotion(emotion: Emotion)
+
     @Delete
     suspend fun deleteEmotion(emotion: Emotion)
+
     @Query("SELECT * FROM emotions_table")
     fun getAllEmotions(): LiveData<List<Emotion>>
+
+    @Query("SELECT * FROM emotions_table WHERE name LIKE :emotionName")
+    fun getEmotionByName(emotionName: String): LiveData<Emotion>
 }

@@ -23,7 +23,8 @@ open class EmotionViewModel(application: Application) : AndroidViewModel(applica
     }
 
     fun deselectEmotion(emotion: Emotion) {
-        mutableSelectedEmotions.value = mutableSelectedEmotions.value?.filter { it.name != emotion.name }
+        mutableSelectedEmotions.value =
+            mutableSelectedEmotions.value?.filter { it.name != emotion.name }
     }
 
     fun isEmotionSelected(emotion: Emotion): Boolean {
@@ -44,5 +45,9 @@ open class EmotionViewModel(application: Application) : AndroidViewModel(applica
         viewModelScope.launch(Dispatchers.IO) {
             emotionDao.deleteEmotion(emotion)
         }
+    }
+
+    fun getEmotionByName(emotionName: String): LiveData<Emotion> {
+        return emotionDao.getEmotionByName(emotionName)
     }
 }
