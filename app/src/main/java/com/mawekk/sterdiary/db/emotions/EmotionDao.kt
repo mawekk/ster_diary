@@ -17,6 +17,6 @@ interface EmotionDao {
     @Query("SELECT * FROM emotions_table")
     fun getAllEmotions(): LiveData<List<Emotion>>
 
-    @Query("SELECT * FROM emotions_table WHERE name LIKE :emotionName")
-    fun getEmotionByName(emotionName: String): LiveData<Emotion>
+    @Query("SELECT * FROM emotions_table WHERE name IN (:emotionsNames)")
+    fun findEmotionsByNames(emotionsNames: List<String>): LiveData<List<Emotion>>
 }

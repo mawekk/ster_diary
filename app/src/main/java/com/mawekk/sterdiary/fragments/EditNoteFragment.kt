@@ -13,12 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
 import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
-import com.mawekk.sterdiary.db.emotions.Emotion
 import com.mawekk.sterdiary.db.emotions.EmotionViewModel
 import com.mawekk.sterdiary.db.notes.NoteViewModel
 import java.text.SimpleDateFormat
@@ -30,6 +28,7 @@ class EditNoteFragment : Fragment() {
     private val timeFormat = SimpleDateFormat("HH:mm")
     private val noteViewModel: NoteViewModel by activityViewModels()
     private val emotionViewModel: EmotionViewModel by activityViewModels()
+    private var noteLoaded = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,22 +49,22 @@ class EditNoteFragment : Fragment() {
         }
         setTopAppBarActions()
         loadNote()
+        selectEmotions()
+        showSelectedEmotions()
         setAddEmotionButton()
         return binding.root
     }
 
     private fun selectEmotions() {
-        noteViewModel.selectedNote.observe(viewLifecycleOwner) {
-            val emotions = mutableListOf<Emotion>()
-            it.emotions.split(" ").forEach { name ->
-                if (name.isNotEmpty()) {
-                    emotionViewModel.getEmotionByName(name).observe(viewLifecycleOwner) { emotion ->
-                        if (emotion != null)
-                            emotions.add(emotion)
+        if (!noteLoaded) {
+            noteViewModel.selectedNote.observe(viewLifecycleOwner) {
+                val emotionsNames = it.emotions.split(" ")
+                emotionViewModel.getEmotionsByNames(emotionsNames)
+                    .observe(viewLifecycleOwner) { emotions ->
+                        emotionViewModel.selectEmotions(emotions)
                     }
-                }
-                emotionViewModel.selectEmotions(emotions)
             }
+            noteLoaded = true
         }
     }
 
@@ -162,7 +161,6 @@ class EditNoteFragment : Fragment() {
     }
 
     private fun showSelectedEmotions() {
-        selectEmotions()
         emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
             binding.selectedEmotions.removeAllViews()
             emotions.forEach {
@@ -193,9 +191,9 @@ class EditNoteFragment : Fragment() {
             setOnMenuItemClickListener {
                 selectEmotions()
                 if (noteViewModel.updateNote(
-                        noteViewModel.parseNote(
+                        noteViewModel.assembleNote(
                             binding,
-                            parseEmotions()
+                            parseEmotions(), noteViewModel.selectedNote.value?.id ?: 0
                         )
                     )
                 ) {

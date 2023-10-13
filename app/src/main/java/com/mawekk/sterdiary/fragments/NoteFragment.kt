@@ -24,6 +24,7 @@ class NoteFragment : Fragment() {
         binding = FragmentNoteBinding.inflate(inflater, container, false)
         setTopAppBarActions()
         showNote()
+        showEmotions()
         disableAllFields()
         return binding.root
     }
@@ -69,6 +70,7 @@ class NoteFragment : Fragment() {
                             activity.onBackPressed()
                             true
                         }
+
                         else -> false
                     }
                 }
@@ -88,7 +90,6 @@ class NoteFragment : Fragment() {
                 seekBarAfter.progress = it.discomfortAfter.dropLast(1).toInt()
                 percentsBefore.text = it.discomfortBefore
                 percentsAfter.text = it.discomfortAfter
-                showEmotions()
             }
         }
     }
@@ -96,13 +97,15 @@ class NoteFragment : Fragment() {
     private fun showEmotions() {
         viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
             note.emotions.split(" ").forEach {
-                val chip = Chip(context)
-                chip.setChipBackgroundColorResource(R.color.light_gray)
-                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
-                chip.setTextAppearance(R.style.ChipTextAppearance)
-                chip.text = it
-                chip.isEnabled = false
-                binding.emotionsGroup.addView(chip)
+                if (it.isNotEmpty()) {
+                    val chip = Chip(context)
+                    chip.setChipBackgroundColorResource(R.color.light_gray)
+                    chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                    chip.setTextAppearance(R.style.ChipTextAppearance)
+                    chip.text = it
+                    chip.isEnabled = false
+                    binding.emotionsGroup.addView(chip)
+                }
             }
         }
     }

@@ -47,7 +47,7 @@ open class EmotionViewModel(application: Application) : AndroidViewModel(applica
         }
     }
 
-    fun getEmotionByName(emotionName: String): LiveData<Emotion> {
-        return emotionDao.getEmotionByName(emotionName)
+    fun getEmotionsByNames(emotionsNames: List<String>): LiveData<List<Emotion>> {
+        return emotionDao.findEmotionsByNames(emotionsNames)
     }
 }

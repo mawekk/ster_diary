@@ -1,7 +1,6 @@
 package com.mawekk.sterdiary.db.notes
 
 import android.app.Application
-import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -48,7 +47,7 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
         return true
     }
 
-    fun parseNote(binding: FragmentNewNoteBinding, emotions: String): Note {
+    fun assembleNote(binding: FragmentNewNoteBinding, emotions: String, id: Int): Note {
         binding.apply {
             val date = dateText.text.toString()
             val time = timeText.text.toString()
@@ -61,7 +60,7 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
             val discomfortAfter = percentsAfter.text.toString()
 
             return Note(
-                0,
+                id,
                 date,
                 time,
                 situation,

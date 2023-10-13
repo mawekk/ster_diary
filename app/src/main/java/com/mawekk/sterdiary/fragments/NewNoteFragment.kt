@@ -11,7 +11,6 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -19,9 +18,7 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
-import com.mawekk.sterdiary.db.emotions.Emotion
 import com.mawekk.sterdiary.db.emotions.EmotionViewModel
-import com.mawekk.sterdiary.db.notes.Note
 import com.mawekk.sterdiary.db.notes.NoteViewModel
 import java.text.SimpleDateFormat
 
@@ -33,6 +30,7 @@ class NewNoteFragment : Fragment() {
     private val timeFormat = SimpleDateFormat("HH:mm")
     private val noteViewModel: NoteViewModel by activityViewModels()
     private val emotionViewModel: EmotionViewModel by activityViewModels()
+    private var startEmotions = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +51,10 @@ class NewNoteFragment : Fragment() {
             percentsBefore.text = "0%"
             percentsAfter.text = "0%"
         }
-
+        if (!startEmotions) {
+            emotionViewModel.selectEmotions(emptyList())
+            startEmotions = true
+        }
         setAddEmotionButton()
         setTopAppBarActions()
         showSelectedEmotions()
@@ -166,7 +167,7 @@ class NewNoteFragment : Fragment() {
                 activity.onBackPressed()
             }
             setOnMenuItemClickListener {
-                if (noteViewModel.saveNote(noteViewModel.parseNote(binding, parseEmotions()))) {
+                if (noteViewModel.saveNote(noteViewModel.assembleNote(binding, parseEmotions(), 0))) {
                     activity.onBackPressed()
                 } else {
                     Toast.makeText(
