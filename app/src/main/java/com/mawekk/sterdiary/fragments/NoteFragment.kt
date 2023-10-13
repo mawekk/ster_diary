@@ -3,14 +3,13 @@ package com.mawekk.sterdiary.fragments
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.databinding.FragmentNoteBinding
-import com.mawekk.sterdiary.db.NoteViewModel
+import com.mawekk.sterdiary.db.notes.NoteViewModel
 
 
 class NoteFragment : Fragment() {

@@ -1,4 +1,4 @@
-package com.mawekk.sterdiary.db
+package com.mawekk.sterdiary.db.notes
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -15,7 +15,7 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
     val selectedNote: LiveData<Note> get() = mutableSelectedNote
 
     init {
-        noteDao = (application as DiaryApp).db.noteDao()
+        noteDao = (application as DiaryApp).noteDatabase.noteDao()
     }
 
     fun selectNote(note: Note) {

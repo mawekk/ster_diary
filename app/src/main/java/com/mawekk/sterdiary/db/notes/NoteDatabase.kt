@@ -1,10 +1,9 @@
-package com.mawekk.sterdiary.db
+package com.mawekk.sterdiary.db.notes
 
-import android.content.Context
-import androidx.room.AutoMigration
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.mawekk.sterdiary.db.notes.Note
+import com.mawekk.sterdiary.db.notes.NoteDao
 
 @Database(entities = [Note::class], version = 2)
 abstract class NoteDatabase : RoomDatabase() {

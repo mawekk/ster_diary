@@ -2,11 +2,10 @@ package com.mawekk.sterdiary
 
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mawekk.sterdiary.databinding.NoteBinding
-import com.mawekk.sterdiary.db.Note
+import com.mawekk.sterdiary.db.notes.Note
 
 class NoteAdapter(val listener: (Note) -> Unit) : RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
     var notes = emptyList<Note>()

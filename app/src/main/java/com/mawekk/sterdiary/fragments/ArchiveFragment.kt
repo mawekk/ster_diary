@@ -7,14 +7,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.NoteAdapter
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentArchiveBinding
-import com.mawekk.sterdiary.db.Note
-import com.mawekk.sterdiary.db.NoteViewModel
+import com.mawekk.sterdiary.db.notes.Note
+import com.mawekk.sterdiary.db.notes.NoteViewModel
 
 
 class ArchiveFragment : Fragment() {

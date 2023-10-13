@@ -11,17 +11,18 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
-import com.mawekk.sterdiary.db.Note
-import com.mawekk.sterdiary.db.NoteViewModel
+import com.mawekk.sterdiary.db.emotions.Emotion
+import com.mawekk.sterdiary.db.emotions.EmotionViewModel
+import com.mawekk.sterdiary.db.notes.Note
+import com.mawekk.sterdiary.db.notes.NoteViewModel
 import java.text.SimpleDateFormat
 
 
@@ -30,7 +31,8 @@ class NewNoteFragment : Fragment() {
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
-    private val viewModel: NoteViewModel by activityViewModels()
+    private val noteViewModel: NoteViewModel by activityViewModels()
+    private val emotionViewModel: EmotionViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +56,7 @@ class NewNoteFragment : Fragment() {
 
         setAddEmotionButton()
         setTopAppBarActions()
+        showSelectedEmotions()
 
         return binding.root
     }
@@ -119,6 +122,27 @@ class NewNoteFragment : Fragment() {
         })
     }
 
+    private fun showSelectedEmotions() {
+        emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
+            binding.selectedEmotions.removeAllViews()
+            emotions.forEach { it ->
+                val chip = Chip(context)
+                chip.setChipBackgroundColorResource(R.color.light_gray)
+                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                chip.setTextAppearance(R.style.ChipTextAppearance)
+                chip.text = it.name
+                chip.isCloseIconVisible = true
+
+                chip.setOnCloseIconClickListener {chip ->
+                    binding.selectedEmotions.removeView(chip)
+                    emotionViewModel.deselectEmotion(it)
+                }
+
+                binding.selectedEmotions.addView(chip)
+            }
+        }
+    }
+
     private fun setAddEmotionButton() {
         val activity = activity as MainActivity
         binding.apply {
@@ -182,7 +206,7 @@ class NewNoteFragment : Fragment() {
         val note = parseNote()
 
         return if (checkNote(note)) {
-            viewModel.addNote(note)
+            noteViewModel.addNote(note)
             true
         } else {
             Toast.makeText(requireContext(), "Все поля должны быть заполнены", Toast.LENGTH_SHORT)

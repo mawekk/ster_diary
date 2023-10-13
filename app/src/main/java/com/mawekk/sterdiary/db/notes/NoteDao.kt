@@ -1,10 +1,11 @@
-package com.mawekk.sterdiary.db
+package com.mawekk.sterdiary.db.notes
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import com.mawekk.sterdiary.db.notes.Note
 
 @Dao
 interface NoteDao {

@@ -1,4 +1,4 @@
-package com.mawekk.sterdiary.db
+package com.mawekk.sterdiary.db.notes
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
