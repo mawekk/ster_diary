@@ -4,13 +4,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
+import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.mawekk.sterdiary.databinding.ActivityMainBinding
+import com.mawekk.sterdiary.db.emotions.EmotionViewModel
+import com.mawekk.sterdiary.db.notes.NoteViewModel
 import com.mawekk.sterdiary.fragments.ArchiveFragment
 import com.mawekk.sterdiary.fragments.NewNoteFragment
 import com.mawekk.sterdiary.fragments.SearchFragment
@@ -20,9 +22,10 @@ import java.util.Stack
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     private val idStack = Stack<Int>()
+    private val noteViewModel: NoteViewModel by viewModels()
+    private val emotionViewModel: EmotionViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreateOptionsMenu(binding.noteTopBar.menu)
         setContentView(binding.root)
         showFragment(ArchiveFragment.newInstance(), R.id.archive_item)
-        setBottomBarNavigation(binding)
-        setTopBarNavigation(binding)
+        setBottomBarNavigation()
+        setTopBarNavigation()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -50,22 +53,41 @@ class MainActivity : AppCompatActivity() {
                     binding.bottomNavigation.selectedItemId = idStack.peek()
                     binding.bottomNavigation.setOnItemSelectedListener(mainListenerBottom)
                 }
+
                 R.id.search_item -> {
                     binding.topAppBar.isVisible = true
                     showBottomNavigation()
                 }
+
                 R.id.topAppBar -> {
                     binding.topAppBar.isVisible = true
                     binding.settingsTopBar.isVisible = false
-                    showBottomNavigation()}
+                    showBottomNavigation()
+                }
+
                 R.id.plus_item -> {
                     binding.topAppBar.isVisible = true
                     binding.newNoteTopBar.isVisible = false
                     showBottomNavigation()
                 }
+
                 R.id.addEmotionButton -> {
-                    binding.newNoteTopBar.isVisible = true
+                    if (idStack.peek() == R.id.plus_item)
+                        binding.newNoteTopBar.isVisible = true
+                    else
+                        binding.editNoteTopBar.isVisible = true
                     binding.emotionsTopBar.isVisible = false
+                }
+
+                R.id.addNoteButton -> {
+                    binding.topAppBar.isVisible = true
+                    binding.noteTopBar.isVisible = false
+                    showBottomNavigation()
+                }
+
+                R.id.edit -> {
+                    binding.noteTopBar.isVisible = true
+                    binding.editNoteTopBar.isVisible = false
                 }
             }
         } else {
@@ -84,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private fun hideBottomNavigation() {
+    fun hideBottomNavigation() {
         binding.apply {
             bottomNavigation.isVisible = false
             bottomShadow.isVisible = false
@@ -137,7 +159,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBottomBarNavigation(binding: ActivityMainBinding) {
+    private fun setBottomBarNavigation() {
         binding.apply {
             bottomNavigation.setOnItemSelectedListener(mainListenerBottom)
             addNoteButton.setOnClickListener {
@@ -152,7 +174,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setTopBarNavigation(binding: ActivityMainBinding) {
+    private fun setTopBarNavigation() {
         binding.apply {
             topAppBar.setNavigationOnClickListener {
                 hideBottomNavigation()
@@ -168,22 +190,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             settingsTopBar.setOnMenuItemClickListener {
-                onBackPressed()
-                true
-            }
-
-            newNoteTopBar.setNavigationOnClickListener {
-                onBackPressed()
-            }
-            newNoteTopBar.setOnMenuItemClickListener {
-                onBackPressed()
-                true
-            }
-
-            emotionsTopBar.setNavigationOnClickListener {
-                onBackPressed()
-            }
-            emotionsTopBar.setOnMenuItemClickListener{
                 onBackPressed()
                 true
             }

@@ -5,16 +5,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mawekk.sterdiary.databinding.NoteBinding
-import com.mawekk.sterdiary.db.Note
+import com.mawekk.sterdiary.db.notes.Note
 
-class NoteAdapter : RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
+class NoteAdapter(val listener: (Note) -> Unit) : RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
     var notes = emptyList<Note>()
+    private lateinit var onClickListener: OnClickListener
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = NoteBinding.bind(itemView)
         fun bind(note: Note) {
             binding.apply {
-                date.text = note.date
+                date.text = note.time + ", " + note.date
                 situation.text = note.situation
             }
         }
@@ -29,11 +30,21 @@ class NoteAdapter : RecyclerView.Adapter<NoteAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(notes[position])
+        holder.itemView.setOnClickListener { listener(notes[position]) }
     }
 
     fun setList(list: List<Note>) {
         notes = list
         notifyDataSetChanged()
+    }
+
+    fun setOnClickListener(onClickListener: OnClickListener) {
+        this.onClickListener = onClickListener
+    }
+
+    // onClickListener Interface
+    interface OnClickListener {
+        fun onClick(note: Note)
     }
 
 }

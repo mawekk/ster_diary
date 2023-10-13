@@ -73,6 +73,7 @@
                 app:placeholderTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/situationText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -124,6 +125,7 @@
                 app:placeholderTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/thoughtsText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -143,6 +145,7 @@
                 android:textSize="16sp" />
 
             <com.google.android.material.chip.ChipGroup
+                android:id="@+id/selectedEmotions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="8dp">
@@ -174,6 +177,7 @@
                 app:placeholderTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/feelingsText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -194,6 +198,7 @@
                 app:placeholderTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/actionsText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"
@@ -381,6 +386,7 @@
                 app:placeholderTextColor="@color/dark_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/answerText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fontFamily="sans-serif"

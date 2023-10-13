@@ -10,13 +10,16 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import android.widget.Toolbar
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import com.google.android.material.appbar.MaterialToolbar
+import androidx.fragment.app.activityViewModels
+import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
+import com.mawekk.sterdiary.db.emotions.EmotionViewModel
+import com.mawekk.sterdiary.db.notes.NoteViewModel
 import java.text.SimpleDateFormat
 
 
@@ -25,6 +28,10 @@ class NewNoteFragment : Fragment() {
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
+    private val noteViewModel: NoteViewModel by activityViewModels()
+    private val emotionViewModel: EmotionViewModel by activityViewModels()
+    private var startEmotions = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,24 +50,90 @@ class NewNoteFragment : Fragment() {
             showSeekBarProgress(seekBarAfter, percentsAfter)
             percentsBefore.text = "0%"
             percentsAfter.text = "0%"
-            setAddEmotionButton()
         }
+        if (!startEmotions) {
+            emotionViewModel.selectEmotions(emptyList())
+            startEmotions = true
+        }
+        setAddEmotionButton()
+        setTopAppBarActions()
+        showSelectedEmotions()
+
         return binding.root
     }
 
-    private fun setAddEmotionButton() {
-        binding.apply {
-            addEmotionButton.setOnClickListener {
-                (activity as MainActivity).findViewById<MaterialToolbar>(R.id.emotionsTopBar).isVisible = true
-                (activity as MainActivity).findViewById<MaterialToolbar>(R.id.newNoteTopBar).isVisible = false
-                (activity as MainActivity).showFragment(
-                    EmotionsFragment.newInstance(),
-                    R.id.addEmotionButton
-                )
+    private fun showTimePickerDialog() {
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+            calendar.set(Calendar.HOUR_OF_DAY, hour)
+            calendar.set(Calendar.MINUTE, minute)
+            binding.timeText.setText(timeFormat.format(calendar.time))
+
+        }
+
+        TimePickerDialog(
+            requireActivity(),
+            R.style.Dialog_Theme,
+            timeSetListener,
+            hour,
+            minute,
+            true
+        )
+            .show()
+    }
+
+
+    private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
+        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(bar: SeekBar) {}
+            override fun onStartTrackingTouch(bar: SeekBar) {}
+            override fun onProgressChanged(
+                bar: SeekBar,
+                progress: Int, fromUser: Boolean
+            ) {
+                textView.text = "$progress%"
+            }
+        })
+    }
+
+    private fun showSelectedEmotions() {
+        emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
+            binding.selectedEmotions.removeAllViews()
+            emotions.forEach {
+                val chip = Chip(context)
+                chip.setChipBackgroundColorResource(R.color.light_gray)
+                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                chip.setTextAppearance(R.style.ChipTextAppearance)
+                chip.text = it.name
+                chip.isCloseIconVisible = true
+
+                chip.setOnCloseIconClickListener { chip ->
+                    binding.selectedEmotions.removeView(chip)
+                    emotionViewModel.deselectEmotion(it)
+                }
+
+                binding.selectedEmotions.addView(chip)
             }
         }
     }
 
+    private fun setAddEmotionButton() {
+        val activity = activity as MainActivity
+        binding.apply {
+            addEmotionButton.setOnClickListener {
+                activity.apply {
+                    binding.emotionsTopBar.isVisible = true
+                    binding.newNoteTopBar.isVisible = false
+                    showFragment(
+                        EmotionsFragment.newInstance(),
+                        R.id.addEmotionButton
+                    )
+                }
+            }
+        }
+    }
 
     private fun showDatePickerDialog() {
         val year = calendar.get(Calendar.YEAR)
@@ -87,40 +160,40 @@ class NewNoteFragment : Fragment() {
 
     }
 
-    private fun showTimePickerDialog() {
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
-            binding.timeText.setText(timeFormat.format(calendar.time))
-
-        }
-
-        TimePickerDialog(
-            requireActivity(),
-            R.style.Dialog_Theme,
-            timeSetListener,
-            hour,
-            minute,
-            true
-        )
-            .show()
-    }
-
-    private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
-        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onStopTrackingTouch(bar: SeekBar) {}
-            override fun onStartTrackingTouch(bar: SeekBar) {}
-            override fun onProgressChanged(
-                bar: SeekBar,
-                progress: Int, fromUser: Boolean
-            ) {
-                textView.text = "$progress%"
+    private fun setTopAppBarActions() {
+        val activity = activity as MainActivity
+        activity.binding.newNoteTopBar.apply {
+            setNavigationOnClickListener {
+                activity.onBackPressed()
             }
-        })
+            setOnMenuItemClickListener {
+                if (noteViewModel.saveNote(noteViewModel.assembleNote(binding, parseEmotions(), 0))) {
+                    activity.onBackPressed()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Все поля должны быть заполнены",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+                true
+            }
+        }
     }
+
+    private fun parseEmotions(): String {
+        val emotions = mutableListOf<String>()
+        emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) {
+            it.forEach { emotion ->
+                emotions.add(
+                    emotion.name
+                )
+            }
+        }
+        return emotions.joinToString(separator = " ")
+    }
+
 
     companion object {
         @JvmStatic
