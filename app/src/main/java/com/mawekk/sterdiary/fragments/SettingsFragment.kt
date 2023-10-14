@@ -10,11 +10,11 @@ import androidx.fragment.app.activityViewModels
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentSettingsBinding
-import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
+import com.mawekk.sterdiary.db.NoteViewModel
 
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
-    private val viewModel: EmotionViewModel by activityViewModels()
+    private val viewModel: NoteViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

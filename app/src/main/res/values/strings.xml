@@ -26,15 +26,16 @@
     <string name="protect">Защитить дневник</string>
     <string name="export">ЭКСПОРТ</string>
     <string name="export_notes">Экспортировать записи</string>
+    <string name="emotions_list">Список эмоций</string>
 
     <string name="date">Дата</string>
     <string name="time">Время</string>
     <string name="situation">Ситуация</string>
-    <string name="discomfort_before">Уровень дискомфорта до записи</string>
+    <string name="discomfort_before">Уровень дискомфорта до записи:</string>
     <string name="thoughts">Мысли</string>
-    <string name="emotions">Эмоции</string>
-    <string name="distortions">Когнитивные искажения</string>
-    <string name="discomfort_after">Уровень дискомфорта после записи</string>
+    <string name="emotions">Эмоции:</string>
+    <string name="distortions">Когнитивные искажения:</string>
+    <string name="discomfort_after">Уровень дискомфорта после записи:</string>
     <string name="add">Добавить</string>
 
     <string name="new_emotion">Добавить эмоцию</string>
@@ -44,5 +45,16 @@
     <string name="cancel">Отмена</string>
 
     <string name="all_fields_must_be_filled">Все поля должны быть заполнены</string>
+
+    <string name="distortion1">Персонализация</string>
+    <string name="distortion2">Сверхобобщение</string>
+    <string name="distortion3">Черно-белое мышление</string>
+    <string name="distortion4">Долженствование</string>
+    <string name="distortion5">Катастрофизация</string>
+    <string name="distortion6">Преувеличение или преуменьшение</string>
+    <string name="distortion7">Эмоциональное обоснование</string>
+    <string name="distortion8">Чтение чужих мыслей</string>
+    <string name="distortion9">Обесценивание положительного</string>
+    <string name="distortion10">Туннельное мышление</string>
 
 </resources>

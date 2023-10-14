@@ -13,7 +13,7 @@ import com.mawekk.sterdiary.NoteAdapter
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentArchiveBinding
 import com.mawekk.sterdiary.db.entities.Note
-import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
+import com.mawekk.sterdiary.db.NoteViewModel
 
 
 class ArchiveFragment : Fragment() {

@@ -11,7 +11,7 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNoteBinding
-import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
+import com.mawekk.sterdiary.db.NoteViewModel
 
 
 class NoteFragment : Fragment() {
@@ -23,22 +23,9 @@ class NoteFragment : Fragment() {
     ): View {
         binding = FragmentNoteBinding.inflate(inflater, container, false)
         setTopAppBarActions()
-        showNote()
         disableAllFields()
+        showNote()
         return binding.root
-    }
-
-    private fun disableAllFields() {
-        binding.apply {
-            situationText.isEnabled = false
-            thoughtsText.isEnabled = false
-            feelingsText.isEnabled = false
-            actionsText.isEnabled = false
-            answerText.isEnabled = false
-
-            seekBarBefore.setOnTouchListener { _, _ -> true }
-            seekBarBefore.setOnTouchListener { _, _ -> true }
-        }
     }
 
     private fun setTopAppBarActions() {
@@ -77,6 +64,19 @@ class NoteFragment : Fragment() {
         }
     }
 
+    private fun disableAllFields() {
+        binding.apply {
+            situationText.isEnabled = false
+            thoughtsText.isEnabled = false
+            feelingsText.isEnabled = false
+            actionsText.isEnabled = false
+            answerText.isEnabled = false
+
+            seekBarBefore.setOnTouchListener { _, _ -> true }
+            seekBarBefore.setOnTouchListener { _, _ -> true }
+        }
+    }
+
     private fun showNote() {
         viewModel.selectedNote.observe(viewLifecycleOwner) {
             binding.apply {
@@ -89,6 +89,7 @@ class NoteFragment : Fragment() {
                 seekBarAfter.progress = it.discomfortAfter.dropLast(1).toInt()
                 percentsBefore.text = it.discomfortBefore
                 percentsAfter.text = it.discomfortAfter
+                showDistortions(it.distortions.split(";"))
             }
         }
         showEmotions()
@@ -108,6 +109,13 @@ class NoteFragment : Fragment() {
 
                 }
             }
+        }
+    }
+
+    private fun showDistortions(distortions: List<String>) {
+        binding.distortionsText.apply {
+            text = distortions.map { "•   $it" }.joinToString(separator = "\n")
+            setLineSpacing(1F, 1.5F)
         }
     }
 

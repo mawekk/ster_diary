@@ -15,11 +15,11 @@ import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentEmotionsBinding
 import com.mawekk.sterdiary.db.entities.Emotion
-import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
+import com.mawekk.sterdiary.db.NoteViewModel
 
 class EmotionsFragment : Fragment() {
     private lateinit var binding: FragmentEmotionsBinding
-    private val viewModel: EmotionViewModel by activityViewModels()
+    private val viewModel: NoteViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -27,10 +27,55 @@ class EmotionsFragment : Fragment() {
         binding = FragmentEmotionsBinding.inflate(inflater, container, false)
         viewModel.editMode.observe(viewLifecycleOwner) {
             showEmotions(it)
+            setTopAppBarActions(it)
         }
         setNewEmotionButton()
-        setTopAppBarActions()
         return binding.root
+    }
+
+    private fun setNewEmotionButton() {
+        val activity = activity as MainActivity
+        binding.apply {
+            addNewEmotionButton.setOnClickListener {
+                val builder = AlertDialog.Builder(activity)
+                val dialogLayout = layoutInflater.inflate(R.layout.new_emotion, null)
+                builder.setView(dialogLayout)
+
+                val dialog = builder.create()
+                val name = dialogLayout.findViewById<EditText>(R.id.emotionText)
+                val saveButton = dialogLayout.findViewById<Button>(R.id.saveButton)
+                val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelButton)
+
+                saveButton.setOnClickListener {
+                    if (name.text.isNotEmpty())
+                        viewModel.addEmotion(Emotion(name.text.toString()))
+                    dialog.dismiss()
+                }
+                cancelButton.setOnClickListener {
+                    dialog.dismiss()
+                }
+
+                dialog.show()
+            }
+        }
+    }
+
+    private fun setTopAppBarActions(isEditMode: Boolean) {
+        val activity = activity as MainActivity
+        activity.binding.emotionsTopBar.apply {
+            if (isEditMode) {
+                setNavigationIcon(null)
+            } else {
+                setNavigationIcon(R.drawable.ic_close)
+                setNavigationOnClickListener { activity.onBackPressed() }
+            }
+            setOnMenuItemClickListener {
+                viewModel.selectEmotions(checkSelectedEmotions())
+                viewModel.changeMode(false)
+                activity.onBackPressed()
+                true
+            }
+        }
     }
 
     private fun showEmotions(isIconVisible: Boolean) {
@@ -77,33 +122,6 @@ class EmotionsFragment : Fragment() {
         checkChip(chip)
     }
 
-    private fun setNewEmotionButton() {
-        val activity = activity as MainActivity
-        binding.apply {
-            addNewEmotionButton.setOnClickListener {
-                val builder = AlertDialog.Builder(activity)
-                val dialogLayout = layoutInflater.inflate(R.layout.new_emotion, null)
-                builder.setView(dialogLayout)
-
-                val dialog = builder.create()
-                val name = dialogLayout.findViewById<EditText>(R.id.emotionText)
-                val saveButton = dialogLayout.findViewById<Button>(R.id.saveButton)
-                val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelButton)
-
-                saveButton.setOnClickListener {
-                    if (name.text.isNotEmpty())
-                        viewModel.addEmotion(Emotion(name.text.toString()))
-                    dialog.dismiss()
-                }
-                cancelButton.setOnClickListener {
-                    dialog.dismiss()
-                }
-
-                dialog.show()
-            }
-        }
-    }
-
     private fun checkSelectedEmotions(): List<Emotion> {
         val emotions = mutableListOf<Emotion>()
         binding.emotionsChipGroup.forEach {
@@ -113,21 +131,6 @@ class EmotionsFragment : Fragment() {
             }
         }
         return emotions
-    }
-
-    private fun setTopAppBarActions() {
-        val activity = activity as MainActivity
-        activity.binding.emotionsTopBar.apply {
-            setNavigationOnClickListener {
-                activity.onBackPressed()
-            }
-            setOnMenuItemClickListener {
-                viewModel.selectEmotions(checkSelectedEmotions())
-                viewModel.changeMode(false)
-                activity.onBackPressed()
-                true
-            }
-        }
     }
 
 

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
@@ -17,17 +18,16 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
-import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
-import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
+import com.mawekk.sterdiary.db.NoteViewModel
 import java.text.SimpleDateFormat
 
 class EditNoteFragment : Fragment() {
     private lateinit var binding: FragmentNewNoteBinding
+    private var boxes = mutableListOf<CheckBox>()
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
-    private val noteViewModel: NoteViewModel by activityViewModels()
-    private val emotionViewModel: EmotionViewModel by activityViewModels()
+    private val viewModel: NoteViewModel by activityViewModels()
     private var noteLoaded = false
 
     override fun onCreateView(
@@ -48,22 +48,12 @@ class EditNoteFragment : Fragment() {
             percentsAfter.text = "0%"
         }
         setTopAppBarActions()
-        loadNote()
-        selectEmotions()
-        showSelectedEmotions()
         setAddEmotionButton()
+        addCheckBoxes()
+        loadNote()
+        selectEmotionsAndDistortions()
+        showSelectedEmotions()
         return binding.root
-    }
-
-    private fun selectEmotions() {
-        if (!noteLoaded) {
-            noteViewModel.selectedNote.observe(viewLifecycleOwner) { note ->
-                noteViewModel.getNoteEmotionsById(note.id).observe(viewLifecycleOwner) {
-                    emotionViewModel.selectEmotions(it)
-                }
-            }
-            noteLoaded = true
-        }
     }
 
     private fun showDatePickerDialog() {
@@ -94,11 +84,12 @@ class EditNoteFragment : Fragment() {
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
 
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
-            calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
-            calendar.set(Calendar.MINUTE, selectedMinute)
-            binding.timeText.setText(timeFormat.format(calendar.time))
-        }
+        val timeSetListener =
+            TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
+                calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
+                calendar.set(Calendar.MINUTE, selectedMinute)
+                binding.timeText.setText(timeFormat.format(calendar.time))
+            }
 
         TimePickerDialog(
             requireActivity(),
@@ -110,7 +101,6 @@ class EditNoteFragment : Fragment() {
         )
             .show()
     }
-
 
     private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -125,46 +115,6 @@ class EditNoteFragment : Fragment() {
         })
     }
 
-    private fun loadNote() {
-        noteViewModel.selectedNote.observe(viewLifecycleOwner) {
-            binding.apply {
-                dateText.setText(it.date)
-                timeText.setText(it.time)
-                situationText.setText(it.situation)
-                thoughtsText.setText(it.thoughts)
-                feelingsText.setText(it.feelings)
-                actionsText.setText(it.actions)
-                answerText.setText(it.answer)
-                seekBarBefore.progress = it.discomfortBefore.dropLast(1).toInt()
-                seekBarAfter.progress = it.discomfortAfter.dropLast(1).toInt()
-                percentsBefore.text = it.discomfortBefore
-                percentsAfter.text = it.discomfortAfter
-            }
-        }
-        showSelectedEmotions()
-    }
-
-    private fun showSelectedEmotions() {
-        emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
-            binding.selectedEmotions.removeAllViews()
-            emotions.forEach {
-                val chip = Chip(context)
-                chip.setChipBackgroundColorResource(R.color.light_gray)
-                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
-                chip.setTextAppearance(R.style.ChipTextAppearance)
-                chip.text = it.name
-                chip.isCloseIconVisible = true
-
-                chip.setOnCloseIconClickListener { view ->
-                    binding.selectedEmotions.removeView(view)
-                    emotionViewModel.deselectEmotion(it)
-                }
-
-                binding.selectedEmotions.addView(chip)
-
-            }
-        }
-    }
 
     private fun setTopAppBarActions() {
         val activity = activity as MainActivity
@@ -173,12 +123,16 @@ class EditNoteFragment : Fragment() {
                 activity.onBackPressed()
             }
             setOnMenuItemClickListener {
-                selectEmotions()
-                val emotions = emotionViewModel.selectedEmotions.value ?: emptyList()
+                selectEmotionsAndDistortions()
+                val emotions = viewModel.selectedEmotions.value ?: emptyList()
                 val note =
-                    noteViewModel.assembleNote(binding, noteViewModel.selectedNote.value!!.id)
-                if (noteViewModel.updateNote(note, emotions)) {
-                    noteViewModel.selectNote(note)
+                    viewModel.assembleNote(
+                        binding,
+                        viewModel.selectedNote.value!!.id,
+                        checkSelectedDistortions().joinToString(separator = ";")
+                    )
+                if (viewModel.updateNote(note, emotions)) {
+                    viewModel.selectNote(note)
                     activity.onBackPressed()
                 } else {
                     Toast.makeText(
@@ -208,6 +162,79 @@ class EditNoteFragment : Fragment() {
             }
         }
     }
+
+    private fun loadNote() {
+        viewModel.selectedNote.observe(viewLifecycleOwner) {
+            binding.apply {
+                dateText.setText(it.date)
+                timeText.setText(it.time)
+                situationText.setText(it.situation)
+                thoughtsText.setText(it.thoughts)
+                feelingsText.setText(it.feelings)
+                actionsText.setText(it.actions)
+                answerText.setText(it.answer)
+                seekBarBefore.progress = it.discomfortBefore.dropLast(1).toInt()
+                seekBarAfter.progress = it.discomfortAfter.dropLast(1).toInt()
+                percentsBefore.text = it.discomfortBefore
+                percentsAfter.text = it.discomfortAfter
+            }
+        }
+        showSelectedEmotions()
+    }
+
+    private fun showSelectedEmotions() {
+        viewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
+            binding.selectedEmotions.removeAllViews()
+            emotions.forEach {
+                val chip = Chip(context)
+                chip.setChipBackgroundColorResource(R.color.light_gray)
+                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                chip.setTextAppearance(R.style.ChipTextAppearance)
+                chip.text = it.name
+                chip.isCloseIconVisible = true
+
+                chip.setOnCloseIconClickListener { view ->
+                    binding.selectedEmotions.removeView(view)
+                    viewModel.deselectEmotion(it)
+                }
+
+                binding.selectedEmotions.addView(chip)
+            }
+        }
+    }
+
+    private fun selectEmotionsAndDistortions() {
+        if (!noteLoaded) {
+            viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
+                note.distortions.split(";").forEach { text ->
+                    boxes.find { it.text.toString() == text }?.isChecked = true
+                }
+                viewModel.getNoteEmotionsById(note.id).observe(viewLifecycleOwner) {
+                    viewModel.selectEmotions(it)
+                }
+            }
+            noteLoaded = true
+        }
+    }
+
+    private fun checkSelectedDistortions(): List<String> =
+        boxes.map { if (it.isChecked) it.text.toString() else "#" }.filter { it != "#" }
+
+    private fun addCheckBoxes() {
+        binding.apply {
+            boxes.add(checkBox1)
+            boxes.add(checkBox2)
+            boxes.add(checkBox3)
+            boxes.add(checkBox4)
+            boxes.add(checkBox5)
+            boxes.add(checkBox6)
+            boxes.add(checkBox7)
+            boxes.add(checkBox8)
+            boxes.add(checkBox9)
+            boxes.add(checkBox10)
+        }
+    }
+
 
     companion object {
         @JvmStatic

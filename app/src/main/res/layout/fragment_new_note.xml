@@ -159,11 +159,11 @@
                 android:layout_marginStart="8dp"
                 android:clickable="true"
                 android:contentDescription="@string/actions"
-                app:srcCompat="@drawable/ic_plus"
-                app:tint="@color/dark_blue"
                 app:backgroundTint="@color/green"
                 app:elevation="0dp"
-                app:fabCustomSize="48dp" />
+                app:fabCustomSize="48dp"
+                app:srcCompat="@drawable/ic_plus"
+                app:tint="@color/dark_blue" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -227,7 +227,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion1"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -241,7 +241,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion2"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -255,7 +255,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion3"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -270,7 +270,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion4"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -285,7 +285,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion5"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -299,7 +299,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion6"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -313,7 +313,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion7"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -327,7 +327,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion8"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -341,7 +341,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion9"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
@@ -355,21 +355,7 @@
                 android:drawableStart="@android:color/transparent"
                 android:drawablePadding="8dp"
                 android:minHeight="48dp"
-                android:text="@string/discomfort_level"
-                android:textColor="@color/dark_blue"
-                android:textSize="14sp"
-                android:theme="@style/CheckBox.Theme" />
-
-            <CheckBox
-                android:id="@+id/checkBox11"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:button="@drawable/checkbox_selector"
-                android:checked="false"
-                android:drawableStart="@android:color/transparent"
-                android:drawablePadding="8dp"
-                android:minHeight="48dp"
-                android:text="@string/discomfort_level"
+                android:text="@string/distortion10"
                 android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 android:theme="@style/CheckBox.Theme" />
