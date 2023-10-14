@@ -13,12 +13,12 @@ import com.mawekk.sterdiary.NoteAdapter
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentArchiveBinding
 import com.mawekk.sterdiary.db.entities.Note
-import com.mawekk.sterdiary.db.NoteViewModel
+import com.mawekk.sterdiary.db.DiaryViewModel
 
 
 class ArchiveFragment : Fragment() {
     private lateinit var binding: FragmentArchiveBinding
-    private val viewModel: NoteViewModel by activityViewModels()
+    private val viewModel: DiaryViewModel by activityViewModels()
     private val noteAdapter = NoteAdapter { note: Note -> noteOnClick(note) }
 
     override fun onCreateView(

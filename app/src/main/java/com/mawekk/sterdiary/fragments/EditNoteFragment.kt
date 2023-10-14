@@ -18,7 +18,7 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
-import com.mawekk.sterdiary.db.NoteViewModel
+import com.mawekk.sterdiary.db.DiaryViewModel
 import java.text.SimpleDateFormat
 
 class EditNoteFragment : Fragment() {
@@ -27,7 +27,7 @@ class EditNoteFragment : Fragment() {
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
-    private val viewModel: NoteViewModel by activityViewModels()
+    private val viewModel: DiaryViewModel by activityViewModels()
     private var noteLoaded = false
 
     override fun onCreateView(

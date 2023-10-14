@@ -15,7 +15,7 @@ import com.mawekk.sterdiary.db.entities.NoteEmotion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-open class NoteViewModel(application: Application) : AndroidViewModel(application) {
+open class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     private val noteDao: NoteDao
     private val mutableSelectedNote = MutableLiveData<Note>()
     val selectedNote: LiveData<Note> get() = mutableSelectedNote
@@ -60,10 +60,10 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun checkNote(note: Note): Boolean {
-//        note.apply {
-//            return (situation.isNotEmpty() && thoughts.isNotEmpty() && feelings.isNotEmpty()
-//                    && actions.isNotEmpty() && answer.isNotEmpty())
-//        }
+        note.apply {
+            return (situation.isNotEmpty() && thoughts.isNotEmpty() && feelings.isNotEmpty()
+                    && actions.isNotEmpty() && answer.isNotEmpty() && distortions.isNotEmpty())
+        }
         return true
     }
 
