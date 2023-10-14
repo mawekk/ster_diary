@@ -134,7 +134,7 @@
                 android:theme="@style/CheckBox.Theme" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/editEmotionsButton"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:contextClickable="true"

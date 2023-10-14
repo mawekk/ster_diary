@@ -14,8 +14,8 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentEmotionsBinding
-import com.mawekk.sterdiary.db.emotions.Emotion
-import com.mawekk.sterdiary.db.emotions.EmotionViewModel
+import com.mawekk.sterdiary.db.entities.Emotion
+import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
 
 class EmotionsFragment : Fragment() {
     private lateinit var binding: FragmentEmotionsBinding
@@ -25,25 +25,37 @@ class EmotionsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         binding = FragmentEmotionsBinding.inflate(inflater, container, false)
-        showEmotions()
+        viewModel.editMode.observe(viewLifecycleOwner) {
+            showEmotions(it)
+        }
         setNewEmotionButton()
         setTopAppBarActions()
         return binding.root
     }
 
-    private fun showEmotions() {
+    private fun showEmotions(isIconVisible: Boolean) {
         viewModel.getAllEmotions().observe(viewLifecycleOwner) { emotions ->
             binding.emotionsChipGroup.removeAllViews()
             emotions.forEach {
                 val chip = Chip(context)
-                if (viewModel.isEmotionSelected(it)) {
-                    chip.isActivated = true
-                }
                 chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
                 chip.setTextAppearance(R.style.ChipTextAppearance)
                 chip.text = it.name
-                chip.setOnClickListener {
-                    emotionOnClick(chip)
+                chip.isCloseIconVisible = isIconVisible
+
+                if (isIconVisible) {
+                    chip.setOnCloseIconClickListener { view ->
+                        binding.emotionsChipGroup.removeView(view)
+                        viewModel.deselectEmotion(it)
+                        viewModel.deleteEmotion(it)
+                    }
+                } else {
+                    if (viewModel.isEmotionSelected(it)) {
+                        chip.isActivated = true
+                    }
+                    chip.setOnClickListener {
+                        emotionOnClick(chip)
+                    }
                 }
 
                 checkChip(chip)
@@ -111,6 +123,7 @@ class EmotionsFragment : Fragment() {
             }
             setOnMenuItemClickListener {
                 viewModel.selectEmotions(checkSelectedEmotions())
+                viewModel.changeMode(false)
                 activity.onBackPressed()
                 true
             }
