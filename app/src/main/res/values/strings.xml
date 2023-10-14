@@ -38,6 +38,7 @@
     <string name="add">Добавить</string>
 
     <string name="new_emotion">Добавить эмоцию</string>
+    <string name="delete_emotion">Удалить эмоцию</string>
     <string name="emotion_example">Например, радость</string>
     <string name="save_emotion">Сохранить</string>
     <string name="cancel">Отмена</string>

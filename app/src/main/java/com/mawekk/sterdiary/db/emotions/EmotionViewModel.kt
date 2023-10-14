@@ -12,7 +12,9 @@ import kotlinx.coroutines.launch
 open class EmotionViewModel(application: Application) : AndroidViewModel(application) {
     private val emotionDao: EmotionDao
     private val mutableSelectedEmotions = MutableLiveData<List<Emotion>>()
+    private val mutableEditMode = MutableLiveData<Boolean>(false)
     val selectedEmotions: LiveData<List<Emotion>> get() = mutableSelectedEmotions
+    val editMode: LiveData<Boolean> get() = mutableEditMode
 
     init {
         emotionDao = (application as DiaryApp).emotionDatabase.emotionDao()
@@ -20,6 +22,10 @@ open class EmotionViewModel(application: Application) : AndroidViewModel(applica
 
     fun selectEmotions(emotions: List<Emotion>) {
         mutableSelectedEmotions.value = emotions
+    }
+
+    fun changeMode(value: Boolean) {
+        mutableEditMode.value = value
     }
 
     fun deselectEmotion(emotion: Emotion) {
@@ -49,5 +55,9 @@ open class EmotionViewModel(application: Application) : AndroidViewModel(applica
 
     fun getEmotionsByNames(emotionsNames: List<String>): LiveData<List<Emotion>> {
         return emotionDao.findEmotionsByNames(emotionsNames)
+    }
+
+    fun getEmotionsCount(): Int {
+        return emotionDao.getEmotionsCount()
     }
 }

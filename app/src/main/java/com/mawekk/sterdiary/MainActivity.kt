@@ -72,10 +72,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.addEmotionButton -> {
-                    if (idStack.peek() == R.id.plus_item)
+                    if (idStack.peek() == R.id.plus_item) {
                         binding.newNoteTopBar.isVisible = true
-                    else
+                    } else if (idStack.peek() == R.id.topAppBar) {
+                        binding.settingsTopBar.isVisible = true
+                    } else {
                         binding.editNoteTopBar.isVisible = true
+                    }
                     binding.emotionsTopBar.isVisible = false
                 }
 
@@ -186,11 +189,6 @@ class MainActivity : AppCompatActivity() {
                 hideBottomNavigation()
                 showFragment(SearchFragment.newInstance(), R.id.search_item)
                 topAppBar.isVisible = false
-                true
-            }
-
-            settingsTopBar.setOnMenuItemClickListener {
-                onBackPressed()
                 true
             }
         }

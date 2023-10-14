@@ -3,7 +3,7 @@ package com.mawekk.sterdiary.db.emotions
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [Emotion::class], version = 10)
+@Database(entities = [Emotion::class], version = 11)
 abstract class EmotionDatabase: RoomDatabase() {
     abstract fun emotionDao(): EmotionDao
 }

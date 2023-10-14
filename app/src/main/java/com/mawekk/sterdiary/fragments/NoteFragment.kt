@@ -11,12 +11,14 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNoteBinding
+import com.mawekk.sterdiary.db.emotions.Emotion
 import com.mawekk.sterdiary.db.notes.NoteViewModel
 
 
 class NoteFragment : Fragment() {
-    lateinit var binding: FragmentNoteBinding
+    private lateinit var binding: FragmentNoteBinding
     private val viewModel: NoteViewModel by activityViewModels()
+    private var f = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,7 +26,7 @@ class NoteFragment : Fragment() {
         binding = FragmentNoteBinding.inflate(inflater, container, false)
         setTopAppBarActions()
         showNote()
-        showEmotions()
+        //showEmotions()
         disableAllFields()
         return binding.root
     }
@@ -92,6 +94,7 @@ class NoteFragment : Fragment() {
                 percentsAfter.text = it.discomfortAfter
             }
         }
+        showEmotions()
     }
 
     private fun showEmotions() {

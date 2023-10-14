@@ -190,13 +190,13 @@ class EditNoteFragment : Fragment() {
             }
             setOnMenuItemClickListener {
                 selectEmotions()
-                if (noteViewModel.updateNote(
-                        noteViewModel.assembleNote(
-                            binding,
-                            parseEmotions(), noteViewModel.selectedNote.value?.id ?: 0
-                        )
-                    )
+                val note = noteViewModel.assembleNote(
+                    binding,
+                    parseEmotions(), noteViewModel.selectedNote.value?.id ?: 0
+                )
+                if (noteViewModel.updateNote(note)
                 ) {
+                    noteViewModel.selectNote(note)
                     activity.onBackPressed()
                 } else {
                     Toast.makeText(

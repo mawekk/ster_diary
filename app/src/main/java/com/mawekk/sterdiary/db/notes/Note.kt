@@ -3,9 +3,6 @@ package com.mawekk.sterdiary.db.notes
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mawekk.sterdiary.db.emotions.Emotion
-import java.sql.Date
-import java.sql.Time
 
 @Entity(tableName = "notes_table")
 data class Note(
