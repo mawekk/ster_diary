@@ -1,4 +1,4 @@
-package com.mawekk.sterdiary.db.viewmodels
+package com.mawekk.sterdiary.db
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mawekk.sterdiary.DiaryApp
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
+import com.mawekk.sterdiary.db.dao.EmotionDao
 import com.mawekk.sterdiary.db.dao.NoteDao
 import com.mawekk.sterdiary.db.entities.Emotion
 import com.mawekk.sterdiary.db.entities.Note
@@ -19,8 +20,16 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
     private val mutableSelectedNote = MutableLiveData<Note>()
     val selectedNote: LiveData<Note> get() = mutableSelectedNote
 
+    private val emotionDao: EmotionDao
+    private val mutableSelectedEmotions = MutableLiveData<List<Emotion>>()
+    private val mutableEditMode = MutableLiveData(false)
+    val selectedEmotions: LiveData<List<Emotion>> get() = mutableSelectedEmotions
+    val editMode: LiveData<Boolean> get() = mutableEditMode
+
     init {
-        noteDao = (application as DiaryApp).diaryDatabase.noteDao()
+        val app = application as DiaryApp
+        noteDao = app.diaryDatabase.noteDao()
+        emotionDao = app.diaryDatabase.emotionDao()
     }
 
     fun selectNote(note: Note) {
@@ -51,14 +60,15 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun checkNote(note: Note): Boolean {
-        note.apply {
-            return (situation.isNotEmpty() && thoughts.isNotEmpty() && feelings.isNotEmpty()
-                    && actions.isNotEmpty() && answer.isNotEmpty())
-        }
+//        note.apply {
+//            return (situation.isNotEmpty() && thoughts.isNotEmpty() && feelings.isNotEmpty()
+//                    && actions.isNotEmpty() && answer.isNotEmpty())
+//        }
+        return true
     }
 
     fun assembleNote(
-        binding: FragmentNewNoteBinding, id: Long
+        binding: FragmentNewNoteBinding, id: Long, distortions: String
     ): Note {
         binding.apply {
             val date = dateText.text.toString()
@@ -80,6 +90,7 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
                 thoughts,
                 feelings,
                 actions,
+                distortions,
                 answer,
                 discomfortAfter
             )
@@ -127,5 +138,49 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getMaxId(): LiveData<Long> {
         return noteDao.getMaxId()
+    }
+
+    private fun deleteNoteEmotionsByName(name: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            noteDao.deleteNoteEmotionsByName(name)
+        }
+    }
+
+    fun selectEmotions(emotions: List<Emotion>) {
+        mutableSelectedEmotions.value = emotions
+    }
+
+    fun changeMode(value: Boolean) {
+        mutableEditMode.value = value
+    }
+
+    fun deselectEmotion(emotion: Emotion) {
+        mutableSelectedEmotions.value =
+            mutableSelectedEmotions.value?.filter { it.name != emotion.name }
+    }
+
+    fun isEmotionSelected(emotion: Emotion): Boolean {
+        return mutableSelectedEmotions.value?.contains(emotion) ?: false
+    }
+
+    fun getAllEmotions(): LiveData<List<Emotion>> {
+        return emotionDao.getAllEmotions()
+    }
+
+    fun addEmotion(emotion: Emotion) {
+        viewModelScope.launch(Dispatchers.IO) {
+            emotionDao.addEmotion(emotion)
+        }
+    }
+
+    fun deleteEmotion(emotion: Emotion) {
+        viewModelScope.launch(Dispatchers.IO) {
+            emotionDao.deleteEmotion(emotion)
+            noteDao.deleteNoteEmotionsByName(emotion.name)
+        }
+    }
+
+    fun getEmotionsCount(): Int {
+        return emotionDao.getEmotionsCount()
     }
 }

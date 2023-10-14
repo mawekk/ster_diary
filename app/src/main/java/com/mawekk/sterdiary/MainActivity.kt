@@ -11,8 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.mawekk.sterdiary.databinding.ActivityMainBinding
-import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
-import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
+import com.mawekk.sterdiary.db.NoteViewModel
 import com.mawekk.sterdiary.fragments.ArchiveFragment
 import com.mawekk.sterdiary.fragments.NewNoteFragment
 import com.mawekk.sterdiary.fragments.SearchFragment
@@ -24,8 +23,7 @@ import java.util.Stack
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private val idStack = Stack<Int>()
-    private val noteViewModel: NoteViewModel by viewModels()
-    private val emotionViewModel: EmotionViewModel by viewModels()
+    private val viewModel: NoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

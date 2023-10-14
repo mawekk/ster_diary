@@ -93,7 +93,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:menu="@menu/emotions_top_bar"
             app:navigationIcon="@drawable/ic_close"
-            app:title="@string/emotions"
+            app:title="@string/emotions_list"
             app:titleCentered="true"
             app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
             app:titleTextColor="@color/dark_blue" />

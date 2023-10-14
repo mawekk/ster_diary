@@ -34,4 +34,7 @@ interface NoteDao {
 
     @Query("DELETE FROM note_emotion_table WHERE note_id = :id")
     fun deleteNoteEmotionsById(id: Long)
+
+    @Query("DELETE FROM note_emotion_table WHERE name = :name")
+    fun deleteNoteEmotionsByName(name: String)
 }

@@ -8,7 +8,7 @@ import com.mawekk.sterdiary.db.entities.Emotion
 import com.mawekk.sterdiary.db.entities.Note
 import com.mawekk.sterdiary.db.entities.NoteEmotion
 
-@Database(entities = [Note::class, Emotion::class, NoteEmotion::class], version = 7)
+@Database(entities = [Note::class, Emotion::class, NoteEmotion::class], version = 8)
 abstract class DiaryDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
     abstract fun emotionDao(): EmotionDao

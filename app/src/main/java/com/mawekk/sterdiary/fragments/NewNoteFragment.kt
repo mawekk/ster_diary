@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
@@ -18,18 +19,17 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
-import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
-import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
+import com.mawekk.sterdiary.db.NoteViewModel
 import java.text.SimpleDateFormat
 
 
 class NewNoteFragment : Fragment() {
     private lateinit var binding: FragmentNewNoteBinding
+    private var boxes = mutableListOf<CheckBox>()
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
-    private val noteViewModel: NoteViewModel by activityViewModels()
-    private val emotionViewModel: EmotionViewModel by activityViewModels()
+    private val viewModel: NoteViewModel by activityViewModels()
     private var startEmotions = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,86 +51,15 @@ class NewNoteFragment : Fragment() {
             percentsAfter.text = "0%"
         }
         if (!startEmotions) {
-            emotionViewModel.selectEmotions(emptyList())
+            viewModel.selectEmotions(emptyList())
             startEmotions = true
         }
         setAddEmotionButton()
         setTopAppBarActions()
         showSelectedEmotions()
+        addCheckBoxes()
 
         return binding.root
-    }
-
-    private fun showTimePickerDialog() {
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-        val minute = calendar.get(Calendar.MINUTE)
-
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
-            calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
-            calendar.set(Calendar.MINUTE, selectedMinute)
-            binding.timeText.setText(timeFormat.format(calendar.time))
-        }
-
-        TimePickerDialog(
-            requireActivity(),
-            R.style.Dialog_Theme,
-            timeSetListener,
-            hour,
-            minute,
-            true
-        )
-            .show()
-    }
-
-
-    private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
-        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
-            override fun onStopTrackingTouch(bar: SeekBar) {}
-            override fun onStartTrackingTouch(bar: SeekBar) {}
-            override fun onProgressChanged(
-                bar: SeekBar,
-                progress: Int, fromUser: Boolean
-            ) {
-                textView.text = "$progress%"
-            }
-        })
-    }
-
-    private fun showSelectedEmotions() {
-        emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
-            binding.selectedEmotions.removeAllViews()
-            emotions.forEach {
-                val chip = Chip(context)
-                chip.setChipBackgroundColorResource(R.color.light_gray)
-                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
-                chip.setTextAppearance(R.style.ChipTextAppearance)
-                chip.text = it.name
-                chip.isCloseIconVisible = true
-
-                chip.setOnCloseIconClickListener { view ->
-                    binding.selectedEmotions.removeView(view)
-                    emotionViewModel.deselectEmotion(it)
-                }
-
-                binding.selectedEmotions.addView(chip)
-            }
-        }
-    }
-
-    private fun setAddEmotionButton() {
-        val activity = activity as MainActivity
-        binding.apply {
-            addEmotionButton.setOnClickListener {
-                activity.apply {
-                    binding.emotionsTopBar.isVisible = true
-                    binding.newNoteTopBar.isVisible = false
-                    showFragment(
-                        EmotionsFragment.newInstance(),
-                        R.id.addEmotionButton
-                    )
-                }
-            }
-        }
     }
 
     private fun showDatePickerDialog() {
@@ -157,6 +86,58 @@ class NewNoteFragment : Fragment() {
 
     }
 
+
+    private fun showTimePickerDialog() {
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timeSetListener =
+            TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
+                calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
+                calendar.set(Calendar.MINUTE, selectedMinute)
+                binding.timeText.setText(timeFormat.format(calendar.time))
+            }
+
+        TimePickerDialog(
+            requireActivity(),
+            R.style.Dialog_Theme,
+            timeSetListener,
+            hour,
+            minute,
+            true
+        )
+            .show()
+    }
+
+    private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
+        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(bar: SeekBar) {}
+            override fun onStartTrackingTouch(bar: SeekBar) {}
+            override fun onProgressChanged(
+                bar: SeekBar,
+                progress: Int, fromUser: Boolean
+            ) {
+                textView.text = "$progress%"
+            }
+        })
+    }
+
+    private fun setAddEmotionButton() {
+        val activity = activity as MainActivity
+        binding.apply {
+            addEmotionButton.setOnClickListener {
+                activity.apply {
+                    binding.emotionsTopBar.isVisible = true
+                    binding.newNoteTopBar.isVisible = false
+                    showFragment(
+                        EmotionsFragment.newInstance(),
+                        R.id.addEmotionButton
+                    )
+                }
+            }
+        }
+    }
+
     private fun setTopAppBarActions() {
         val activity = activity as MainActivity
         activity.binding.newNoteTopBar.apply {
@@ -164,12 +145,16 @@ class NewNoteFragment : Fragment() {
                 activity.onBackPressed()
             }
             setOnMenuItemClickListener {
-                val emotions = emotionViewModel.selectedEmotions.value ?: emptyList()
+                val emotions = viewModel.selectedEmotions.value ?: emptyList()
                 var id: Long
-                noteViewModel.getMaxId().observe(viewLifecycleOwner) {
+                viewModel.getMaxId().observe(viewLifecycleOwner) {
                     id = it ?: 0L
-                    if (noteViewModel.saveNote(
-                            noteViewModel.assembleNote(binding, id + 1),
+                    if (viewModel.saveNote(
+                            viewModel.assembleNote(
+                                binding,
+                                id + 1,
+                                checkSelectedDistortions().joinToString(separator = ";")
+                            ),
                             emotions
                         )
                     ) {
@@ -185,6 +170,45 @@ class NewNoteFragment : Fragment() {
                 }
                 true
             }
+        }
+    }
+
+    private fun showSelectedEmotions() {
+        viewModel.selectedEmotions.observe(viewLifecycleOwner) { emotions ->
+            binding.selectedEmotions.removeAllViews()
+            emotions.forEach {
+                val chip = Chip(context)
+                chip.setChipBackgroundColorResource(R.color.light_gray)
+                chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                chip.setTextAppearance(R.style.ChipTextAppearance)
+                chip.text = it.name
+                chip.isCloseIconVisible = true
+
+                chip.setOnCloseIconClickListener { view ->
+                    binding.selectedEmotions.removeView(view)
+                    viewModel.deselectEmotion(it)
+                }
+
+                binding.selectedEmotions.addView(chip)
+            }
+        }
+    }
+
+    private fun checkSelectedDistortions(): List<String> =
+        boxes.map { if (it.isChecked) it.text.toString() else "#" }.filter { it != "#" }
+
+    private fun addCheckBoxes() {
+        binding.apply {
+            boxes.add(checkBox1)
+            boxes.add(checkBox2)
+            boxes.add(checkBox3)
+            boxes.add(checkBox4)
+            boxes.add(checkBox5)
+            boxes.add(checkBox6)
+            boxes.add(checkBox7)
+            boxes.add(checkBox8)
+            boxes.add(checkBox9)
+            boxes.add(checkBox10)
         }
     }
 

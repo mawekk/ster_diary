@@ -14,7 +14,7 @@ data class Note(
     @ColumnInfo(name = "thoughts") var thoughts: String,
     @ColumnInfo(name = "feelings") var feelings: String,
     @ColumnInfo(name = "actions") var actions: String,
-    //var distortions: String,
+    @ColumnInfo(name = "distortions")var distortions: String,
     @ColumnInfo(name = "answer") var answer: String,
     @ColumnInfo(name = "discomfort_after") var discomfortAfter: String
 )
