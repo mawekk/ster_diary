@@ -9,9 +9,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
-import com.mawekk.sterdiary.databinding.FragmentEmotionsBinding
 import com.mawekk.sterdiary.databinding.FragmentSettingsBinding
-import com.mawekk.sterdiary.db.emotions.EmotionViewModel
+import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
 
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
@@ -19,7 +18,7 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSettingsBinding.inflate(inflater, container, false)
         setTopAppBarActions()
         setEditEmotionsButton()

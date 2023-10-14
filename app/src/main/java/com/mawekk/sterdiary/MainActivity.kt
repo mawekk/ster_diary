@@ -11,8 +11,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.mawekk.sterdiary.databinding.ActivityMainBinding
-import com.mawekk.sterdiary.db.emotions.EmotionViewModel
-import com.mawekk.sterdiary.db.notes.NoteViewModel
+import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
+import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
 import com.mawekk.sterdiary.fragments.ArchiveFragment
 import com.mawekk.sterdiary.fragments.NewNoteFragment
 import com.mawekk.sterdiary.fragments.SearchFragment

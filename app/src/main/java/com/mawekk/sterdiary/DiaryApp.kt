@@ -2,29 +2,22 @@ package com.mawekk.sterdiary
 
 import android.app.Application
 import androidx.room.Room
-import com.mawekk.sterdiary.db.emotions.Emotion
-import com.mawekk.sterdiary.db.emotions.EmotionDatabase
-import com.mawekk.sterdiary.db.notes.NoteDatabase
+import com.mawekk.sterdiary.db.DiaryDatabase
+import com.mawekk.sterdiary.db.entities.Emotion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 class DiaryApp : Application() {
-    lateinit var noteDatabase: NoteDatabase
-    lateinit var emotionDatabase: EmotionDatabase
+    lateinit var diaryDatabase: DiaryDatabase
 
     override fun onCreate() {
         super.onCreate()
-        noteDatabase = Room.databaseBuilder(
+        diaryDatabase = Room.databaseBuilder(
             applicationContext,
-            NoteDatabase::class.java, "diary-notes-db"
+            DiaryDatabase::class.java, "diary-db"
         )
             .fallbackToDestructiveMigration().build()
-
-        emotionDatabase = Room.databaseBuilder(
-            applicationContext,
-            EmotionDatabase::class.java, "diary-emotion-db"
-        ).fallbackToDestructiveMigration().build()
 
         fillEmotionsDb()
     }
@@ -32,9 +25,9 @@ class DiaryApp : Application() {
     private fun fillEmotionsDb() {
         MainScope().launch(Dispatchers.IO) {
             val defaultEmotions = resources.getStringArray(R.array.default_emotions)
-            if (emotionDatabase.emotionDao().getEmotionsCount() == 0) {
+            if (diaryDatabase.emotionDao().getEmotionsCount() == 0) {
                 defaultEmotions.forEach {
-                    emotionDatabase.emotionDao().addEmotion(Emotion(it))
+                    diaryDatabase.emotionDao().addEmotion(Emotion(it))
                 }
             }
         }

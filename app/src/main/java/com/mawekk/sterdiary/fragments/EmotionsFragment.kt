@@ -9,14 +9,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.view.forEach
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentEmotionsBinding
-import com.mawekk.sterdiary.db.emotions.Emotion
-import com.mawekk.sterdiary.db.emotions.EmotionViewModel
+import com.mawekk.sterdiary.db.entities.Emotion
+import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
 
 class EmotionsFragment : Fragment() {
     private lateinit var binding: FragmentEmotionsBinding
@@ -45,8 +44,8 @@ class EmotionsFragment : Fragment() {
                 chip.isCloseIconVisible = isIconVisible
 
                 if (isIconVisible) {
-                    chip.setOnCloseIconClickListener { chip ->
-                        binding.emotionsChipGroup.removeView(chip)
+                    chip.setOnCloseIconClickListener { view ->
+                        binding.emotionsChipGroup.removeView(view)
                         viewModel.deselectEmotion(it)
                         viewModel.deleteEmotion(it)
                     }

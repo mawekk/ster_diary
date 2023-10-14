@@ -18,20 +18,19 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
-import com.mawekk.sterdiary.db.emotions.EmotionViewModel
-import com.mawekk.sterdiary.db.notes.NoteViewModel
+import com.mawekk.sterdiary.db.viewmodels.EmotionViewModel
+import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
 import java.text.SimpleDateFormat
 
 
 class NewNoteFragment : Fragment() {
-    lateinit var binding: FragmentNewNoteBinding
+    private lateinit var binding: FragmentNewNoteBinding
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
     private val noteViewModel: NoteViewModel by activityViewModels()
     private val emotionViewModel: EmotionViewModel by activityViewModels()
     private var startEmotions = false
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -66,11 +65,10 @@ class NewNoteFragment : Fragment() {
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
 
-        val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
-            calendar.set(Calendar.HOUR_OF_DAY, hour)
-            calendar.set(Calendar.MINUTE, minute)
+        val timeSetListener = TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
+            calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
+            calendar.set(Calendar.MINUTE, selectedMinute)
             binding.timeText.setText(timeFormat.format(calendar.time))
-
         }
 
         TimePickerDialog(
@@ -109,8 +107,8 @@ class NewNoteFragment : Fragment() {
                 chip.text = it.name
                 chip.isCloseIconVisible = true
 
-                chip.setOnCloseIconClickListener { chip ->
-                    binding.selectedEmotions.removeView(chip)
+                chip.setOnCloseIconClickListener { view ->
+                    binding.selectedEmotions.removeView(view)
                     emotionViewModel.deselectEmotion(it)
                 }
 
@@ -141,11 +139,10 @@ class NewNoteFragment : Fragment() {
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
         val dateSetListener =
-            DatePickerDialog.OnDateSetListener { view, year, month, day ->
-                calendar.set(Calendar.YEAR, year)
-                calendar.set(Calendar.MONTH, month)
-                calendar.set(Calendar.DAY_OF_MONTH, day)
-
+            DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
+                calendar.set(Calendar.YEAR, selectedYear)
+                calendar.set(Calendar.MONTH, selectedMonth)
+                calendar.set(Calendar.DAY_OF_MONTH, selectedDay)
                 binding.dateText.setText(dateFormat.format(calendar.time))
             }
 
@@ -167,33 +164,29 @@ class NewNoteFragment : Fragment() {
                 activity.onBackPressed()
             }
             setOnMenuItemClickListener {
-                if (noteViewModel.saveNote(noteViewModel.assembleNote(binding, parseEmotions(), 0))) {
-                    activity.onBackPressed()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Все поля должны быть заполнены",
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                val emotions = emotionViewModel.selectedEmotions.value ?: emptyList()
+                var id: Long
+                noteViewModel.getMaxId().observe(viewLifecycleOwner) {
+                    id = it ?: 0L
+                    if (noteViewModel.saveNote(
+                            noteViewModel.assembleNote(binding, id + 1),
+                            emotions
+                        )
+                    ) {
+                        activity.onBackPressed()
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.all_fields_must_be_filled,
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
                 }
                 true
             }
         }
     }
-
-    private fun parseEmotions(): String {
-        val emotions = mutableListOf<String>()
-        emotionViewModel.selectedEmotions.observe(viewLifecycleOwner) {
-            it.forEach { emotion ->
-                emotions.add(
-                    emotion.name
-                )
-            }
-        }
-        return emotions.joinToString(separator = " ")
-    }
-
 
     companion object {
         @JvmStatic

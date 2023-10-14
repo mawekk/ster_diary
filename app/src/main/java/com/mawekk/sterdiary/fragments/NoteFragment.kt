@@ -11,22 +11,19 @@ import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNoteBinding
-import com.mawekk.sterdiary.db.emotions.Emotion
-import com.mawekk.sterdiary.db.notes.NoteViewModel
+import com.mawekk.sterdiary.db.viewmodels.NoteViewModel
 
 
 class NoteFragment : Fragment() {
     private lateinit var binding: FragmentNoteBinding
     private val viewModel: NoteViewModel by activityViewModels()
-    private var f = false
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentNoteBinding.inflate(inflater, container, false)
         setTopAppBarActions()
         showNote()
-        //showEmotions()
         disableAllFields()
         return binding.root
     }
@@ -99,15 +96,16 @@ class NoteFragment : Fragment() {
 
     private fun showEmotions() {
         viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
-            note.emotions.split(" ").forEach {
-                if (it.isNotEmpty()) {
+            viewModel.getNoteEmotionsById(note.id).observe(viewLifecycleOwner) { emotions ->
+                emotions.forEach {
                     val chip = Chip(context)
                     chip.setChipBackgroundColorResource(R.color.light_gray)
                     chip.setChipStrokeColorResource(com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
                     chip.setTextAppearance(R.style.ChipTextAppearance)
-                    chip.text = it
+                    chip.text = it.name
                     chip.isEnabled = false
                     binding.emotionsGroup.addView(chip)
+
                 }
             }
         }
