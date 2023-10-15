@@ -72,6 +72,7 @@ class EmotionsFragment : Fragment() {
             setOnMenuItemClickListener {
                 viewModel.selectEmotions(checkSelectedEmotions())
                 viewModel.changeEditMode(false)
+                viewModel.changeLoadMode(false)
                 activity.onBackPressed()
                 true
             }
