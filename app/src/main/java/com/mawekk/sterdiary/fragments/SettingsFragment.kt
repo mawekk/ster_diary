@@ -32,7 +32,7 @@ class SettingsFragment : Fragment() {
                 activity.apply {
                     binding.emotionsTopBar.isVisible = true
                     binding.settingsTopBar.isVisible = false
-                    viewModel.changeMode(true)
+                    viewModel.changeEditMode(true)
                     showFragment(
                         EmotionsFragment.newInstance(),
                         R.id.addEmotionButton

@@ -23,13 +23,19 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
     private val emotionDao: EmotionDao
     private val mutableSelectedEmotions = MutableLiveData<List<Emotion>>()
     private val mutableEditMode = MutableLiveData(false)
+    private val mutableLoadMode = MutableLiveData(false)
     val selectedEmotions: LiveData<List<Emotion>> get() = mutableSelectedEmotions
     val editMode: LiveData<Boolean> get() = mutableEditMode
+    val loadMode: LiveData<Boolean> get() = mutableLoadMode
 
     init {
         val app = application as DiaryApp
         noteDao = app.diaryDatabase.noteDao()
         emotionDao = app.diaryDatabase.emotionDao()
+    }
+
+    fun changeLoadMode(value: Boolean) {
+        mutableLoadMode.value = value
     }
 
     fun selectNote(note: Note) {
@@ -143,7 +149,7 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
         mutableSelectedEmotions.value = emotions
     }
 
-    fun changeMode(value: Boolean) {
+    fun changeEditMode(value: Boolean) {
         mutableEditMode.value = value
     }
 

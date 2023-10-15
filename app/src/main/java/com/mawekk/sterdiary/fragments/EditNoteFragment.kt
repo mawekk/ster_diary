@@ -28,7 +28,6 @@ class EditNoteFragment : Fragment() {
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
     private val viewModel: DiaryViewModel by activityViewModels()
-    private var isNoteLoaded = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,11 +46,13 @@ class EditNoteFragment : Fragment() {
             percentsBefore.text = "0%"
             percentsAfter.text = "0%"
         }
-        setTopAppBarActions()
         setAddEmotionButton()
         addCheckBoxes()
         loadNote()
-        selectEmotionsAndDistortions()
+        viewModel.loadMode.observe(viewLifecycleOwner) {
+            selectEmotionsAndDistortions(it)
+            setTopAppBarActions(it)
+        }
         showSelectedEmotions()
         return binding.root
     }
@@ -116,14 +117,15 @@ class EditNoteFragment : Fragment() {
     }
 
 
-    private fun setTopAppBarActions() {
+    private fun setTopAppBarActions(isLoadMode: Boolean) {
         val activity = activity as MainActivity
         activity.binding.editNoteTopBar.apply {
             setNavigationOnClickListener {
                 activity.onBackPressed()
+                viewModel.changeLoadMode(false)
             }
             setOnMenuItemClickListener {
-                selectEmotionsAndDistortions()
+                selectEmotionsAndDistortions(isLoadMode)
                 val emotions = viewModel.selectedEmotions.value ?: emptyList()
                 val note =
                     viewModel.assembleNote(
@@ -133,6 +135,7 @@ class EditNoteFragment : Fragment() {
                     )
                 if (viewModel.updateNote(note, emotions)) {
                     viewModel.selectNote(note)
+                    viewModel.changeLoadMode(false)
                     activity.onBackPressed()
                 } else {
                     Toast.makeText(
@@ -203,8 +206,8 @@ class EditNoteFragment : Fragment() {
         }
     }
 
-    private fun selectEmotionsAndDistortions() {
-        if (!isNoteLoaded) {
+    private fun selectEmotionsAndDistortions(isLoadMode: Boolean) {
+        if (isLoadMode) {
             viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
                 note.distortions.split(";").forEach { text ->
                     boxes.find { it.text.toString() == text }?.isChecked = true
@@ -213,7 +216,7 @@ class EditNoteFragment : Fragment() {
                     viewModel.selectEmotions(it)
                 }
             }
-            isNoteLoaded = true
+            viewModel.changeLoadMode(false)
         }
     }
 
