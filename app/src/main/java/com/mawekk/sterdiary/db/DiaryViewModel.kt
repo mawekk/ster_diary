@@ -64,7 +64,6 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
             return (situation.isNotEmpty() && thoughts.isNotEmpty() && feelings.isNotEmpty()
                     && actions.isNotEmpty() && answer.isNotEmpty() && distortions.isNotEmpty())
         }
-        return true
     }
 
     fun assembleNote(
