@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 
 class EditNoteFragment : Fragment() {
     private lateinit var binding: FragmentNewNoteBinding
-    private var boxes = mutableListOf<CheckBox>()
+    private lateinit var boxes: List<CheckBox>
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
@@ -45,9 +45,20 @@ class EditNoteFragment : Fragment() {
             showSeekBarProgress(seekBarAfter, percentsAfter)
             percentsBefore.text = "0%"
             percentsAfter.text = "0%"
+            boxes = listOf(
+                checkBox1,
+                checkBox2,
+                checkBox3,
+                checkBox4,
+                checkBox5,
+                checkBox6,
+                checkBox7,
+                checkBox8,
+                checkBox9,
+                checkBox10
+            )
         }
         setAddEmotionButton()
-        addCheckBoxes()
         loadNote()
         viewModel.loadMode.observe(viewLifecycleOwner) {
             selectEmotionsAndDistortions(it)
@@ -222,21 +233,6 @@ class EditNoteFragment : Fragment() {
 
     private fun checkSelectedDistortions(): List<String> =
         boxes.map { if (it.isChecked) it.text.toString() else "#" }.filter { it != "#" }
-
-    private fun addCheckBoxes() {
-        binding.apply {
-            boxes.add(checkBox1)
-            boxes.add(checkBox2)
-            boxes.add(checkBox3)
-            boxes.add(checkBox4)
-            boxes.add(checkBox5)
-            boxes.add(checkBox6)
-            boxes.add(checkBox7)
-            boxes.add(checkBox8)
-            boxes.add(checkBox9)
-            boxes.add(checkBox10)
-        }
-    }
 
 
     companion object {

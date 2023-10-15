@@ -116,7 +116,6 @@ class NoteFragment : Fragment() {
 
     private fun showDistortions(distortions: List<String>) {
         binding.distortionsText.apply {
-            clearComposingText()
             text = distortions.map { "•   $it" }.joinToString(separator = "\n")
             setLineSpacing(1F, 1.5F)
         }
