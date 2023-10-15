@@ -28,7 +28,7 @@ class EditNoteFragment : Fragment() {
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val timeFormat = SimpleDateFormat("HH:mm")
     private val viewModel: DiaryViewModel by activityViewModels()
-    private var noteLoaded = false
+    private var isNoteLoaded = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -204,7 +204,7 @@ class EditNoteFragment : Fragment() {
     }
 
     private fun selectEmotionsAndDistortions() {
-        if (!noteLoaded) {
+        if (!isNoteLoaded) {
             viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
                 note.distortions.split(";").forEach { text ->
                     boxes.find { it.text.toString() == text }?.isChecked = true
@@ -213,7 +213,7 @@ class EditNoteFragment : Fragment() {
                     viewModel.selectEmotions(it)
                 }
             }
-            noteLoaded = true
+            isNoteLoaded = true
         }
     }
 
