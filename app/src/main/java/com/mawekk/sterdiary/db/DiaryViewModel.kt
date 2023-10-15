@@ -140,12 +140,6 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
         return noteDao.getMaxId()
     }
 
-    private fun deleteNoteEmotionsByName(name: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            noteDao.deleteNoteEmotionsByName(name)
-        }
-    }
-
     fun selectEmotions(emotions: List<Emotion>) {
         mutableSelectedEmotions.value = emotions
     }
