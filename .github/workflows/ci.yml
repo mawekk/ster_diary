@@ -1,0 +1,66 @@
+name: CI
+
+on: [ push, pull_request ]
+
+jobs:
+#  preface:
+#    runs-on: ubuntu-latest
+#    steps:
+#    - name: Set up JDK
+#      uses: actions/setup-java@v3
+#      with:
+#        java-version: '17'
+#        distribution: 'temurin'
+
+  lint:
+
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run detekt
+        run: ./gradlew detekt
+      - name: Upload detekt report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Detekt report
+          path: build/reports/detekt/
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Run JUnit
+        run: ./gradlew test
+      - name: Upload JUnit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test report
+          path: ster_diary/build/reports/tests/
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build
+        run: ./gradlew build
