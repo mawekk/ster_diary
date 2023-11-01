@@ -37,7 +37,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Run JUnit
-        run: ./gradlew test
+        run: ./gradlew testDebug
       - name: Upload JUnit report
         uses: actions/upload-artifact@v3
         with:
@@ -56,4 +56,4 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Build
-        run: ./gradlew build
+        run: ./gradlew assembleDebug
