@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.chip.Chip
@@ -40,6 +42,7 @@ class EmotionsFragment : Fragment() {
                 val builder = AlertDialog.Builder(activity)
                 val dialogLayout = layoutInflater.inflate(R.layout.new_emotion, null)
                 builder.setView(dialogLayout)
+                builder.setTitle(R.string.add_emotion)
 
                 val dialog = builder.create()
                 val name = dialogLayout.findViewById<EditText>(R.id.emotionText)
@@ -55,6 +58,11 @@ class EmotionsFragment : Fragment() {
                     dialog.dismiss()
                 }
 
+                dialog.setOnShowListener {
+                    val titleId = resources.getIdentifier("alertTitle", "id", "android")
+                    val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+                    dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
+                }
                 dialog.show()
             }
         }
