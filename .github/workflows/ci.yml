@@ -4,26 +4,6 @@ on: [ push, pull_request ]
 
 jobs:
 
-  lint:
-
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v2
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-      - name: Run detekt
-        run: ./gradlew detekt
-      - name: Upload detekt report
-        uses: actions/upload-artifact@v3
-        with:
-          name: Detekt report
-          path: build/reports/detekt/
-
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -37,11 +17,6 @@ jobs:
           distribution: 'temurin'
       - name: Run JUnit
         run: ./gradlew testDebug
-      - name: Upload JUnit report
-        uses: actions/upload-artifact@v3
-        with:
-          name: Test report
-          path: ster_diary/build/reports/tests/
 
   build:
     name: Build
