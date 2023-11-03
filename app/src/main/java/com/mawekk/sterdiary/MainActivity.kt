@@ -1,17 +1,19 @@
 package com.mawekk.sterdiary
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.activity.viewModels
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import com.google.android.material.textfield.TextInputEditText
 import com.mawekk.sterdiary.databinding.ActivityMainBinding
-import com.mawekk.sterdiary.db.DiaryViewModel
 import com.mawekk.sterdiary.fragments.ArchiveFragment
 import com.mawekk.sterdiary.fragments.NewNoteFragment
 import com.mawekk.sterdiary.fragments.SearchFragment
@@ -19,11 +21,11 @@ import com.mawekk.sterdiary.fragments.SettingsFragment
 import com.mawekk.sterdiary.fragments.StatisticsFragment
 import java.util.Stack
 
+
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private val idStack = Stack<Int>()
-    private val viewModel: DiaryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +96,22 @@ class MainActivity : AppCompatActivity() {
         } else {
             finish()
         }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_UP) {
+            val view = currentFocus
+            if (view is TextInputEditText) {
+                val outRect = Rect()
+                view.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                    view.clearFocus()
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event)
     }
 
 
