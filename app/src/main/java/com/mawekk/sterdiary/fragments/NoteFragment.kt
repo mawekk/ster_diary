@@ -1,9 +1,13 @@
 package com.mawekk.sterdiary.fragments
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -12,6 +16,7 @@ import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentNoteBinding
 import com.mawekk.sterdiary.db.DiaryViewModel
+import com.mawekk.sterdiary.db.entities.Note
 
 
 class NoteFragment : Fragment() {
@@ -48,9 +53,7 @@ class NoteFragment : Fragment() {
                         }
 
                         R.id.delete -> {
-                            editNoteTopBar.isVisible = false
-                            viewModel.deleteNote(note)
-                            activity.onBackPressed()
+                            showDeleteDialog(activity, note)
                             true
                         }
 
@@ -119,6 +122,35 @@ class NoteFragment : Fragment() {
             text = distortions.map { "•   $it" }.joinToString(separator = "\n")
             setLineSpacing(1F, 1.5F)
         }
+    }
+
+    private fun showDeleteDialog(activity: MainActivity, note: Note) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogLayout = layoutInflater.inflate(R.layout.delete_dialog, null)
+        builder.setView(dialogLayout)
+        builder.setTitle(R.string.delete_dialog_title)
+
+
+        val dialog = builder.create()
+        val deleteButton = dialogLayout.findViewById<Button>(R.id.deleteButton)
+        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelDelButton)
+
+        deleteButton.setOnClickListener {
+            activity.binding.editNoteTopBar.isVisible = false
+            viewModel.deleteNote(note)
+            activity.onBackPressed()
+            dialog.dismiss()
+        }
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+            dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
+        }
+        dialog.show()
     }
 
     companion object {
