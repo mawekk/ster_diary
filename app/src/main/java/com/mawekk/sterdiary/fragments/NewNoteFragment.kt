@@ -1,5 +1,6 @@
 package com.mawekk.sterdiary.fragments
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.icu.util.Calendar
@@ -7,11 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -94,7 +97,6 @@ class NewNoteFragment : Fragment() {
             month,
             day
         ).show()
-
     }
 
 
@@ -153,10 +155,11 @@ class NewNoteFragment : Fragment() {
         val activity = activity as MainActivity
         activity.binding.newNoteTopBar.apply {
             setNavigationOnClickListener {
-                activity.onBackPressed()
+                showBackDialog(activity)
             }
             setOnMenuItemClickListener {
                 val emotions = viewModel.selectedEmotions.value ?: emptyList()
+                val distortions = checkSelectedDistortions().joinToString(separator = ";")
                 var id: Long
                 viewModel.getMaxId().observe(viewLifecycleOwner) {
                     id = it ?: 0L
@@ -164,7 +167,7 @@ class NewNoteFragment : Fragment() {
                             viewModel.assembleNote(
                                 binding,
                                 id + 1,
-                                checkSelectedDistortions().joinToString(separator = ";")
+                                distortions
                             ),
                             emotions
                         )
@@ -207,6 +210,32 @@ class NewNoteFragment : Fragment() {
 
     private fun checkSelectedDistortions(): List<String> =
         boxes.map { if (it.isChecked) it.text.toString() else "#" }.filter { it != "#" }
+
+    private fun showBackDialog(activity: MainActivity) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogLayout = layoutInflater.inflate(R.layout.back_dialog, null)
+        builder.setView(dialogLayout)
+        builder.setTitle(R.string.back_dialog_title)
+
+        val dialog = builder.create()
+        val okButton = dialogLayout.findViewById<Button>(R.id.okButton)
+        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelBackButton)
+
+        okButton.setOnClickListener {
+            activity.onBackPressed()
+            dialog.dismiss()
+        }
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+            dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
+        }
+        dialog.show()
+    }
 
     companion object {
         @JvmStatic
