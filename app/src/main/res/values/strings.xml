@@ -49,15 +49,4 @@
     <string name="delete_dialog_title">Вы действительно хотите удалить запись?</string>
     <string name="back_dialog_title">Все введенные данные будут потеряны</string>
 
-    <string name="distortion1">Персонализация</string>
-    <string name="distortion2">Сверхобобщение</string>
-    <string name="distortion3">Черно-белое мышление</string>
-    <string name="distortion4">Долженствование</string>
-    <string name="distortion5">Катастрофизация</string>
-    <string name="distortion6">Преувеличение или преуменьшение</string>
-    <string name="distortion7">Эмоциональное обоснование</string>
-    <string name="distortion8">Чтение чужих мыслей</string>
-    <string name="distortion9">Обесценивание положительного</string>
-    <string name="distortion10">Туннельное мышление</string>
-
 </resources>

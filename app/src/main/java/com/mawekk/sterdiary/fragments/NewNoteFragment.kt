@@ -70,6 +70,7 @@ class NewNoteFragment : Fragment() {
             startEmotions = true
         }
         setAddEmotionButton()
+        setDistortions()
         setTopAppBarActions()
         showSelectedEmotions()
 
@@ -149,6 +150,11 @@ class NewNoteFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setDistortions() {
+        val distortionsNames = resources.getStringArray(R.array.cognitive_distortions_names)
+        distortionsNames.zip(boxes) {name, box -> box.text = name}
     }
 
     private fun setTopAppBarActions() {

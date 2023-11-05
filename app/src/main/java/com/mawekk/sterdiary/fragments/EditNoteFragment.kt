@@ -1,5 +1,6 @@
 package com.mawekk.sterdiary.fragments
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.icu.util.Calendar
@@ -8,10 +9,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.chip.Chip
@@ -59,6 +62,7 @@ class EditNoteFragment : Fragment() {
             )
         }
         setAddEmotionButton()
+        setDistortions()
         loadNote()
         viewModel.loadMode.observe(viewLifecycleOwner) {
             selectEmotionsAndDistortions(it)
@@ -114,6 +118,11 @@ class EditNoteFragment : Fragment() {
             .show()
     }
 
+    private fun setDistortions() {
+        val distortionsNames = resources.getStringArray(R.array.cognitive_distortions_names)
+        distortionsNames.zip(boxes) {name, box -> box.text = name}
+    }
+
     private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStopTrackingTouch(bar: SeekBar) {}
@@ -132,8 +141,7 @@ class EditNoteFragment : Fragment() {
         val activity = activity as MainActivity
         activity.binding.editNoteTopBar.apply {
             setNavigationOnClickListener {
-                activity.onBackPressed()
-                viewModel.changeLoadMode(false)
+                showBackDialog(activity)
             }
             setOnMenuItemClickListener {
                 selectEmotionsAndDistortions(isLoadMode)
@@ -234,6 +242,33 @@ class EditNoteFragment : Fragment() {
     private fun checkSelectedDistortions(): List<String> =
         boxes.map { if (it.isChecked) it.text.toString() else "#" }.filter { it != "#" }
 
+
+    private fun showBackDialog(activity: MainActivity) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogLayout = layoutInflater.inflate(R.layout.back_dialog, null)
+        builder.setView(dialogLayout)
+        builder.setTitle(R.string.back_dialog_title)
+
+        val dialog = builder.create()
+        val okButton = dialogLayout.findViewById<Button>(R.id.okButton)
+        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelBackButton)
+
+        okButton.setOnClickListener {
+            activity.onBackPressed()
+            viewModel.changeLoadMode(false)
+            dialog.dismiss()
+        }
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+            dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
+        }
+        dialog.show()
+    }
 
     companion object {
         @JvmStatic
