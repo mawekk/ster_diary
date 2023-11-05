@@ -14,6 +14,7 @@ import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.databinding.FragmentArchiveBinding
 import com.mawekk.sterdiary.db.entities.Note
 import com.mawekk.sterdiary.db.DiaryViewModel
+import java.text.SimpleDateFormat
 
 
 class ArchiveFragment : Fragment() {
@@ -37,7 +38,12 @@ class ArchiveFragment : Fragment() {
             adapter = noteAdapter
         }
         viewModel.getAllNotes()
-            .observe(viewLifecycleOwner) { noteAdapter.setList(it) }
+            .observe(viewLifecycleOwner) { noteAdapter.setList(it.sortedBy { note ->
+                val dateAndTimeString = note.date + ' ' + note.time
+                val formatter = SimpleDateFormat("dd MMMM yyyy HH:mm")
+                val dateAndTime = formatter.parse(dateAndTimeString)
+                dateAndTime
+            }) }
     }
 
     private fun noteOnClick(note: Note) {

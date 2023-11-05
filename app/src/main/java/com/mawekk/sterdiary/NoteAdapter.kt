@@ -15,7 +15,7 @@ class NoteAdapter(val listener: (Note) -> Unit) : RecyclerView.Adapter<NoteAdapt
         private val binding = NoteBinding.bind(itemView)
         fun bind(note: Note) {
             binding.apply {
-                date.text = note.time + ", " + note.date
+                date.text = note.date + ", " + note.time
                 situation.text = note.situation
             }
         }
