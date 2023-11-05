@@ -115,21 +115,21 @@
             app:titleTextColor="@color/dark_blue" />
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/editNoteTopBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            android:minHeight="64dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/edit_note_top_bar"
-            app:navigationIcon="@drawable/ic_close"
-            app:title="@string/edit_note"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
-            app:titleTextColor="@color/dark_blue" />
+                android:id="@+id/editNoteTopBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                android:minHeight="64dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:menu="@menu/new_note_top_bar"
+                app:navigationIcon="@drawable/ic_close"
+                app:title="@string/edit_note"
+                app:titleCentered="true"
+                app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
+                app:titleTextColor="@color/dark_blue"
+                android:visibility="gone" />
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/newNoteTopBar"
@@ -164,19 +164,19 @@
             app:titleTextColor="@color/dark_blue" />
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/topAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/top_app_bar"
-            app:navigationIcon="@drawable/ic_settings"
-            app:title="@string/archive"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
-            app:titleTextColor="@color/dark_blue" />
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:menu="@menu/top_app_bar"
+                app:navigationIcon="@drawable/ic_settings"
+                app:title="@string/archive"
+                app:titleCentered="true"
+                app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
+                app:titleTextColor="@color/dark_blue" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -61,8 +61,7 @@ class NewNoteFragment : Fragment() {
                 checkBox6,
                 checkBox7,
                 checkBox8,
-                checkBox9,
-                checkBox10
+                checkBox9
             )
         }
         if (!startEmotions) {
@@ -154,7 +153,7 @@ class NewNoteFragment : Fragment() {
 
     private fun setDistortions() {
         val distortionsNames = resources.getStringArray(R.array.cognitive_distortions_names)
-        distortionsNames.zip(boxes) {name, box -> box.text = name}
+        distortionsNames.zip(boxes) { name, box -> box.text = name }
     }
 
     private fun setTopAppBarActions() {
@@ -163,30 +162,36 @@ class NewNoteFragment : Fragment() {
             setNavigationOnClickListener {
                 showBackDialog(activity)
             }
-            setOnMenuItemClickListener {
-                val emotions = viewModel.selectedEmotions.value ?: emptyList()
-                val distortions = checkSelectedDistortions().joinToString(separator = ";")
-                var id: Long
-                viewModel.getMaxId().observe(viewLifecycleOwner) {
-                    id = it ?: 0L
-                    if (viewModel.saveNote(
-                            viewModel.assembleNote(
-                                binding,
-                                id + 1,
-                                distortions
-                            ),
-                            emotions
-                        )
-                    ) {
-                        activity.onBackPressed()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            R.string.all_fields_must_be_filled,
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.save_item -> {
+                        val emotions = viewModel.selectedEmotions.value ?: emptyList()
+                        val distortions = checkSelectedDistortions().joinToString(separator = ";")
+                        var id: Long
+                        viewModel.getMaxId().observe(viewLifecycleOwner) {
+                            id = it ?: 0L
+                            if (viewModel.saveNote(
+                                    viewModel.assembleNote(
+                                        binding,
+                                        id + 1,
+                                        distortions
+                                    ),
+                                    emotions
+                                )
+                            ) {
+                                activity.onBackPressed()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    R.string.all_fields_must_be_filled,
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        }
                     }
+
+                    R.id.help_item -> showHelpDialog(activity)
                 }
                 true
             }
@@ -232,6 +237,27 @@ class NewNoteFragment : Fragment() {
             dialog.dismiss()
         }
         cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+            dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
+        }
+        dialog.show()
+    }
+
+    private fun showHelpDialog(activity: MainActivity) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogLayout = layoutInflater.inflate(R.layout.help, null)
+        builder.setView(dialogLayout)
+        builder.setTitle(R.string.help)
+
+        val dialog = builder.create()
+        val okButton = dialogLayout.findViewById<Button>(R.id.closeHelpButton)
+
+        okButton.setOnClickListener {
             dialog.dismiss()
         }
 

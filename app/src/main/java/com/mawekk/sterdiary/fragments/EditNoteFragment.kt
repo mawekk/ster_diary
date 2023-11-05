@@ -57,8 +57,7 @@ class EditNoteFragment : Fragment() {
                 checkBox6,
                 checkBox7,
                 checkBox8,
-                checkBox9,
-                checkBox10
+                checkBox9
             )
         }
         setAddEmotionButton()
@@ -120,7 +119,7 @@ class EditNoteFragment : Fragment() {
 
     private fun setDistortions() {
         val distortionsNames = resources.getStringArray(R.array.cognitive_distortions_names)
-        distortionsNames.zip(boxes) {name, box -> box.text = name}
+        distortionsNames.zip(boxes) { name, box -> box.text = name }
     }
 
     private fun showSeekBarProgress(seekBar: SeekBar, textView: TextView) {
@@ -143,26 +142,31 @@ class EditNoteFragment : Fragment() {
             setNavigationOnClickListener {
                 showBackDialog(activity)
             }
-            setOnMenuItemClickListener {
-                selectEmotionsAndDistortions(isLoadMode)
-                val emotions = viewModel.selectedEmotions.value ?: emptyList()
-                val note =
-                    viewModel.assembleNote(
-                        binding,
-                        viewModel.selectedNote.value!!.id,
-                        checkSelectedDistortions().joinToString(separator = ";")
-                    )
-                if (viewModel.updateNote(note, emotions)) {
-                    viewModel.selectNote(note)
-                    viewModel.changeLoadMode(false)
-                    activity.onBackPressed()
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.all_fields_must_be_filled,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.save_item -> {
+                        selectEmotionsAndDistortions(isLoadMode)
+                        val emotions = viewModel.selectedEmotions.value ?: emptyList()
+                        val note =
+                            viewModel.assembleNote(
+                                binding,
+                                viewModel.selectedNote.value!!.id,
+                                checkSelectedDistortions().joinToString(separator = ";")
+                            )
+                        if (viewModel.updateNote(note, emotions)) {
+                            viewModel.selectNote(note)
+                            viewModel.changeLoadMode(false)
+                            activity.onBackPressed()
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.all_fields_must_be_filled,
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
+                    }
+                    R.id.help_item -> showHelpDialog(activity)
                 }
                 true
             }
@@ -259,6 +263,27 @@ class EditNoteFragment : Fragment() {
             dialog.dismiss()
         }
         cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+            dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
+        }
+        dialog.show()
+    }
+
+    private fun showHelpDialog(activity: MainActivity) {
+        val builder = AlertDialog.Builder(activity)
+        val dialogLayout = layoutInflater.inflate(R.layout.help, null)
+        builder.setView(dialogLayout)
+        builder.setTitle(R.string.help)
+
+        val dialog = builder.create()
+        val okButton = dialogLayout.findViewById<Button>(R.id.closeHelpButton)
+
+        okButton.setOnClickListener {
             dialog.dismiss()
         }
 

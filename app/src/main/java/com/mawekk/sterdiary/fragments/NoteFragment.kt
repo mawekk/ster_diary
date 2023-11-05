@@ -57,11 +57,6 @@ class NoteFragment : Fragment() {
                             true
                         }
 
-                        R.id.help -> {
-                            activity.onBackPressed()
-                            true
-                        }
-
                         else -> false
                     }
                 }

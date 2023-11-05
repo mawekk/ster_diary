@@ -2,8 +2,6 @@ package com.mawekk.sterdiary
 
 import android.graphics.Rect
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
@@ -35,12 +33,6 @@ class MainActivity : AppCompatActivity() {
         showFragment(ArchiveFragment.newInstance(), R.id.archive_item)
         setBottomBarNavigation()
         setTopBarNavigation()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.note_top_bar, menu)
-        return true
     }
 
     override fun onBackPressed() {
