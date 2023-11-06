@@ -3,6 +3,7 @@ package com.mawekk.sterdiary
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.mawekk.sterdiary.databinding.NoteBinding
 import com.mawekk.sterdiary.db.entities.Note
@@ -13,10 +14,19 @@ class NoteAdapter(val listener: (Note) -> Unit) : RecyclerView.Adapter<NoteAdapt
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = NoteBinding.bind(itemView)
-        fun bind(note: Note) {
+        fun bind(nextNote: Note, previousNote: Note?) {
             binding.apply {
-                date.text = note.date + ", " + note.time
-                situation.text = note.situation
+                val previousDateString = when (previousNote) {
+                    null -> ""
+                    else -> previousNote.date.drop(3)
+                }
+                val nextDateString = nextNote.date.trimStart('0')
+                date.text = nextDateString.dropLast(5) + ", " + nextNote.time
+                situation.text = nextNote.situation
+                divider.text = nextNote.date.drop(3)
+                if (divider.text.toString() == previousDateString || previousNote == null) {
+                    divider.isVisible = false
+                }
             }
         }
     }
@@ -29,7 +39,11 @@ class NoteAdapter(val listener: (Note) -> Unit) : RecyclerView.Adapter<NoteAdapt
     override fun getItemCount() = notes.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(notes[position])
+        val previousNote = when (position > 0) {
+            true -> notes[position - 1]
+            else -> null
+        }
+        holder.bind(notes[position], previousNote)
         holder.itemView.setOnClickListener { listener(notes[position]) }
     }
 

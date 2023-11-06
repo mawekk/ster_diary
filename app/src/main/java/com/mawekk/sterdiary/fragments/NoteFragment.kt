@@ -37,7 +37,7 @@ class NoteFragment : Fragment() {
         val activity = activity as MainActivity
         activity.binding.apply {
             viewModel.selectedNote.observe(viewLifecycleOwner) { note ->
-                noteTopBar.title = (note.time + ", " + note.date)
+                noteTopBar.title = (note.date + ", " + note.time)
 
                 noteTopBar.setNavigationOnClickListener {
                     activity.onBackPressed()
