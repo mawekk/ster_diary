@@ -24,9 +24,8 @@ class NoteAdapter(val listener: (Note) -> Unit) : RecyclerView.Adapter<NoteAdapt
                 date.text = nextDateString.dropLast(5) + ", " + nextNote.time
                 situation.text = nextNote.situation
                 divider.text = nextNote.date.drop(3)
-                if (divider.text.toString() == previousDateString || previousNote == null) {
-                    divider.isVisible = false
-                }
+                divider.isVisible =
+                    !(divider.text.toString() == previousDateString || previousNote == null)
             }
         }
     }
