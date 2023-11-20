@@ -8,18 +8,6 @@
         android:gravity="center">
 
 
-    <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/divider"
-            android:backgroundTint="@color/light_gray"
-            android:textColor="@color/dark_blue"
-            android:textAllCaps="true"
-            android:textSize="14sp"
-            android:layout_weight="1"
-            android:clickable="false" />
-
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
