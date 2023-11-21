@@ -131,7 +131,7 @@ class NoteFragment : Fragment() {
         val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelDelButton)
 
         deleteButton.setOnClickListener {
-            activity.binding.editNoteTopBar.isVisible = false
+            activity.binding.noteTopBar.isVisible = false
             viewModel.deleteNote(note)
             activity.onBackPressed()
             dialog.dismiss()
