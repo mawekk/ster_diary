@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -75,9 +76,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.addNoteButton -> {
-                    binding.topAppBar.isVisible = true
                     binding.noteTopBar.isVisible = false
-                    showBottomNavigation()
+                    if (idStack.peek() != R.id.search_item) {
+                        binding.topAppBar.isVisible = true
+                        showBottomNavigation()
+                    }
                 }
 
                 R.id.edit -> {
@@ -91,15 +94,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.action == MotionEvent.ACTION_UP) {
+        if (event.action == MotionEvent.ACTION_DOWN) {
             val view = currentFocus
-            if (view is TextInputEditText) {
+            if (view is TextInputEditText || view is EditText) {
                 val outRect = Rect()
                 view.getGlobalVisibleRect(outRect)
                 if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
                     view.clearFocus()
                     val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0)
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
                 }
             }
         }
