@@ -1,11 +1,14 @@
 package com.mawekk.sterdiary.db
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mawekk.sterdiary.DiaryApp
+import com.mawekk.sterdiary.STRUCTURE
+import com.mawekk.sterdiary.TAG
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
 import com.mawekk.sterdiary.db.dao.EmotionDao
 import com.mawekk.sterdiary.db.dao.NoteDao
@@ -65,10 +68,30 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    private fun checkNote(note: Note): Boolean {
+    private fun checkNote(note: Note, emotions: List<Emotion>): Boolean {
+        val settings = getApplication<DiaryApp>().getSharedPreferences(TAG, Context.MODE_PRIVATE)
+
+        val levelState = settings.getBoolean(STRUCTURE[0], true)
+        val feelingsState = settings.getBoolean(STRUCTURE[1], true)
+        val actionsState = settings.getBoolean(STRUCTURE[2], true)
+        val answerState = settings.getBoolean(STRUCTURE[3], true)
+
         note.apply {
-            return (situation.isNotEmpty() && thoughts.isNotEmpty() && feelings.isNotEmpty()
-                    && actions.isNotEmpty() && answer.isNotEmpty() && distortions.isNotEmpty())
+            var result =
+                situation.isNotEmpty() && thoughts.isNotEmpty() && distortions.isNotEmpty() && emotions.isNotEmpty()
+            if (levelState) {
+                result = result && discomfortAfter.isNotEmpty() && discomfortBefore.isNotEmpty()
+            }
+            if (feelingsState) {
+                result = result && feelings.isNotEmpty()
+            }
+            if (actionsState) {
+                result = result && actions.isNotEmpty()
+            }
+            if (answerState) {
+                result = result && answer.isNotEmpty()
+            }
+            return result
         }
     }
 
@@ -110,7 +133,7 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun saveNote(note: Note, emotions: List<Emotion>): Boolean {
-        return if (checkNote(note)) {
+        return if (checkNote(note, emotions)) {
             addNote(note)
             updateNoteEmotions(note.id, emotions)
             true
@@ -120,7 +143,7 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun updateNote(note: Note, emotions: List<Emotion>): Boolean {
-        return if (checkNote(note)) {
+        return if (checkNote(note, emotions)) {
             viewModelScope.launch(Dispatchers.IO) {
                 noteDao.updateNote(note)
             }

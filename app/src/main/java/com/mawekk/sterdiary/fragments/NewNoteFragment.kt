@@ -1,5 +1,6 @@
 package com.mawekk.sterdiary.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,7 +57,8 @@ class NewNoteFragment : Fragment() {
                 when (item.itemId) {
                     R.id.save_item -> {
                         val emotions = viewModel.selectedEmotions.value ?: emptyList()
-                        val distortions = worker.checkSelectedDistortions().joinToString(separator = ";")
+                        val distortions =
+                            worker.checkSelectedDistortions().joinToString(separator = ";")
                         var id: Long
                         viewModel.getMaxId().observe(viewLifecycleOwner) {
                             id = it ?: 0L
@@ -81,7 +83,12 @@ class NewNoteFragment : Fragment() {
                         }
                     }
 
-                    R.id.help_item -> worker.showHelpDialog(layoutInflater.inflate(R.layout.help, null))
+                    R.id.help_item -> worker.showHelpDialog(
+                        layoutInflater.inflate(
+                            R.layout.help,
+                            null
+                        )
+                    )
                 }
                 true
             }

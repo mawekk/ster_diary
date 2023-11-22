@@ -17,6 +17,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.chip.Chip
 import com.mawekk.sterdiary.databinding.FragmentNewNoteBinding
 import com.mawekk.sterdiary.db.DiaryViewModel
+import com.mawekk.sterdiary.db.entities.Note
 import com.mawekk.sterdiary.fragments.EmotionsFragment
 import java.text.SimpleDateFormat
 
@@ -114,8 +115,11 @@ class NoteWorker(
             percentsBefore.text = "0%"
             percentsAfter.text = "0%"
 
+            distortionsText.isVisible = false
+
             setAddEmotionButton()
             setDistortions()
+            setStructure()
         }
     }
 
@@ -135,7 +139,7 @@ class NoteWorker(
         }
     }
 
-    private fun setDistortions() {
+    fun setDistortions() {
         binding.apply {
             boxes = listOf(
                 checkBox1,
@@ -222,5 +226,92 @@ class NoteWorker(
             dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
         }
         dialog.show()
+    }
+
+    fun setStructure() {
+        val settings = activity.getSharedPreferences(TAG, Context.MODE_PRIVATE)
+
+        val level = settings.getBoolean(STRUCTURE[0], true)
+        val feelings = settings.getBoolean(STRUCTURE[1], true)
+        val actions = settings.getBoolean(STRUCTURE[2], true)
+        val answer = settings.getBoolean(STRUCTURE[3], true)
+        binding.apply {
+            levelBefore.isVisible = level
+            levelBeforeLayout.isVisible = level
+            levelAfter.isVisible = level
+            levelAfterLayout.isVisible = level
+            feelingsLayout.isVisible = feelings
+            actionsLayout.isVisible = actions
+            answerLayout.isVisible = answer
+        }
+    }
+
+    fun clearStructure() {
+        binding.apply {
+            levelBefore.isVisible = false
+            levelBeforeLayout.isVisible = false
+            levelAfter.isVisible = false
+            levelAfterLayout.isVisible = false
+            feelingsLayout.isVisible = false
+            actionsLayout.isVisible = false
+            answerLayout.isVisible = false
+        }
+    }
+
+    fun showDeleteDialog(note: Note, dialogLayout: View) {
+        val builder = AlertDialog.Builder(activity)
+        builder.setView(dialogLayout)
+        builder.setTitle(R.string.delete_dialog_title)
+
+
+        val dialog = builder.create()
+        val deleteButton = dialogLayout.findViewById<Button>(R.id.deleteButton)
+        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancelDelButton)
+
+        deleteButton.setOnClickListener {
+            activity.binding.noteTopBar.isVisible = false
+            viewModel.deleteNote(note)
+            activity.onBackPressed()
+            dialog.dismiss()
+        }
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setOnShowListener {
+            val titleId = fragmentActivity.resources.getIdentifier("alertTitle", "id", "android")
+            val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+            dialogTitle.setTextColor(ContextCompat.getColor(activity, R.color.dark_blue))
+        }
+        dialog.show()
+    }
+
+    fun showFilledFields(note: Note) {
+        binding.apply {
+            note.apply {
+                if (discomfortBefore != "0%") {
+                    seekBarBefore.progress = discomfortBefore.dropLast(1).toInt()
+                    seekBarAfter.progress = discomfortAfter.dropLast(1).toInt()
+                    percentsBefore.text = discomfortBefore
+                    percentsAfter.text = discomfortAfter
+                    levelBefore.isVisible = true
+                    levelBeforeLayout.isVisible = true
+                    levelAfter.isVisible = true
+                    levelAfterLayout.isVisible = true
+                }
+                if (feelings != "") {
+                    feelingsText.setText(feelings)
+                    feelingsLayout.isVisible = true
+                }
+                if (actions != "") {
+                    actionsText.setText(actions)
+                    actionsLayout.isVisible = true
+                }
+                if (answer != "") {
+                    answerText.setText(answer)
+                    answerLayout.isVisible = true
+                }
+            }
+        }
     }
 }

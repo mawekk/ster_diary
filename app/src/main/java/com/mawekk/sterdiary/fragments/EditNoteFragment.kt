@@ -72,7 +72,12 @@ class EditNoteFragment : Fragment() {
                         }
                     }
 
-                    R.id.help_item -> worker.showHelpDialog(layoutInflater.inflate(R.layout.help, null))
+                    R.id.help_item -> worker.showHelpDialog(
+                        layoutInflater.inflate(
+                            R.layout.help,
+                            null
+                        )
+                    )
                 }
                 true
             }
@@ -86,13 +91,8 @@ class EditNoteFragment : Fragment() {
                 timeText.setText(it.time)
                 situationText.setText(it.situation)
                 thoughtsText.setText(it.thoughts)
-                feelingsText.setText(it.feelings)
-                actionsText.setText(it.actions)
-                answerText.setText(it.answer)
-                seekBarBefore.progress = it.discomfortBefore.dropLast(1).toInt()
-                seekBarAfter.progress = it.discomfortAfter.dropLast(1).toInt()
-                percentsBefore.text = it.discomfortBefore
-                percentsAfter.text = it.discomfortAfter
+
+                worker.showFilledFields(it)
             }
         }
     }

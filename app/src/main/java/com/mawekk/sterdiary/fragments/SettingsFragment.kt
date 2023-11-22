@@ -76,13 +76,13 @@ class SettingsFragment : Fragment() {
                 else -> "system"
             }
 
-            editor.apply() {
+            editor.apply {
                 putString(THEME, theme)
                 boxes.forEachIndexed { index, box ->
                     putBoolean(STRUCTURE[index], box.isChecked)
                 }
+                apply()
             }
-            editor.apply()
         }
     }
 
