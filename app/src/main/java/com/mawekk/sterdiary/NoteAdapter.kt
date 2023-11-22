@@ -15,14 +15,13 @@ class DividerItem(val text: String) : RecyclerViewItem()
 class NoteAdapter(val listener: (NoteItem) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var data = emptyList<RecyclerViewItem>()
 
-    private val viewTypeNote = 1
-    private val viewTypeDivider = 2
+
 
     override fun getItemViewType(position: Int): Int {
         if (data[position] is NoteItem) {
-            return viewTypeNote
+            return VIEW_TYPE_NOTE
         }
-        return viewTypeDivider
+        return VIEW_TYPE_DIVIDER
     }
 
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -45,7 +44,7 @@ class NoteAdapter(val listener: (NoteItem) -> Unit) : RecyclerView.Adapter<Recyc
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            viewTypeNote -> {
+            VIEW_TYPE_NOTE -> {
                 val itemView =
                     LayoutInflater.from(parent.context).inflate(R.layout.note, parent, false)
                 NoteViewHolder(itemView)
