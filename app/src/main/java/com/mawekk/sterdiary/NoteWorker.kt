@@ -228,7 +228,7 @@ class NoteWorker(
         dialog.show()
     }
 
-    fun setStructure() {
+    private fun setStructure() {
         val settings = activity.getSharedPreferences(TAG, Context.MODE_PRIVATE)
 
         val level = settings.getBoolean(STRUCTURE[0], true)

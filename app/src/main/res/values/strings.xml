@@ -49,6 +49,8 @@
     <string name="delete_dialog_title">Вы действительно хотите удалить запись?</string>
     <string name="back_dialog_title">Все введенные данные будут потеряны</string>
 
+    <string name="top_emotions">Самые частые эмоции:</string>
+
     <string name="help_text">
         <b>ДАТА И ВРЕМЯ</b>\n
         Отметьте дату и время, в которые произошла ситуация\n\n

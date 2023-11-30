@@ -24,6 +24,9 @@ interface NoteDao {
     @Query("SELECT * FROM notes_table")
     fun getAllNotes(): LiveData<List<Note>>
 
+    @Query("SELECT * FROM note_emotion_table")
+    fun getNotesEmotions(): LiveData<List<NoteEmotion>>
+
     @Query("SELECT MAX(id) FROM notes_table")
     fun getMaxId(): LiveData<Long>
     @Insert

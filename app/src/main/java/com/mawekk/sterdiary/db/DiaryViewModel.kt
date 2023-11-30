@@ -189,6 +189,10 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
         return emotionDao.getAllEmotions()
     }
 
+    fun getNotesEmotions(): LiveData<List<NoteEmotion>> {
+        return noteDao.getNotesEmotions()
+    }
+
     fun addEmotion(emotion: Emotion) {
         viewModelScope.launch(Dispatchers.IO) {
             emotionDao.addEmotion(emotion)
