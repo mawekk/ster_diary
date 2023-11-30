@@ -59,6 +59,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.plus_item -> {
+                    if (idStack.peek() == R.id.statistics_item) {
+                        onBackPressed()
+                    }
                     binding.topAppBar.isVisible = true
                     binding.newNoteTopBar.isVisible = false
                     showBottomNavigation()

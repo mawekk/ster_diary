@@ -97,7 +97,9 @@ class StatisticsFragment : Fragment() {
 
         binding.distorionsDonut.apply {
             cap = sum
-            submitData(sections)
+            if (cap > 0) {
+                submitData(sections)
+            }
         }
 
     }
