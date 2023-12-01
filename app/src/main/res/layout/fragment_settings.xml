@@ -159,15 +159,28 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:text="@string/protect"
-                android:textColor="@color/dark_blue"
-                android:textSize="14sp"
-                android:focusable="true" />
+                    android:id="@+id/createPINButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/create_pin_code"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="14sp"
+                    android:focusable="true" />
+
+            <TextView
+                    android:id="@+id/changePINButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/change_pin_code"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="14sp"
+                    android:focusable="true"
+                    android:visibility="gone" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -186,15 +199,15 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView7"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:text="@string/export_notes"
-                android:textColor="@color/dark_blue"
-                android:textSize="14sp"
-                android:focusable="true" />
+                    android:id="@+id/exportButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:text="@string/export_notes"
+                    android:textColor="@color/dark_blue"
+                    android:textSize="14sp"
+                    android:focusable="true" />
 
         </LinearLayout>
 

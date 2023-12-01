@@ -23,7 +23,8 @@
     <string name="actions">Предпринятые действия</string>
     <string name="answer">Рациональный ответ</string>
     <string name="pin_code">PIN-КОД</string>
-    <string name="protect">Защитить дневник</string>
+    <string name="create_pin_code">Установить PIN-код</string>
+    <string name="change_pin_code">Изменить PIN-код</string>
     <string name="export">ЭКСПОРТ</string>
     <string name="export_notes">Экспортировать записи</string>
     <string name="emotions_list">Список эмоций</string>
@@ -50,6 +51,16 @@
     <string name="back_dialog_title">Все введенные данные будут потеряны</string>
 
     <string name="top_emotions">Самые частые эмоции:</string>
+    <string name="start_period">Начало периода</string>
+    <string name="end_period">Конец периода</string>
+    <string name="incorrect_period">Некорректный период</string>
+    <string name="export_button">Экспортировать</string>
+    <string name="format">Формат экспортируемого файла:</string>
+    <string name="csv">CSV</string>
+    <string name="export_text">Выберите период, записи за который вы хотите экспортировать.
+        По умолчанию экспортируются все записи.</string>
+
+    <string name="enter_pin">Введите PIN-код</string>
 
     <string name="help_text">
         <b>ДАТА И ВРЕМЯ</b>\n

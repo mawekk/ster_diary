@@ -6,9 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mawekk.sterdiary.db.DiaryViewModel
-import com.mawekk.sterdiary.db.entities.Note
 import com.mawekk.sterdiary.fragments.NoteFragment
-import java.text.SimpleDateFormat
 
 class RecyclerViewWorker(
     private val recyclerView: RecyclerView,
@@ -25,21 +23,11 @@ class RecyclerViewWorker(
         }
     }
 
-    private fun sortNotes(notes: List<Note>): List<Note> {
-        return notes.sortedBy { note ->
-            val dateAndTimeString = note.date + ' ' + note.time
-            val formatter = SimpleDateFormat("dd MMMM yyyy HH:mm")
-            val dateAndTime = formatter.parse(dateAndTimeString)
-
-            dateAndTime
-        }
-    }
-
     fun setRecyclerViewItemsForArchive() {
         viewModel.getAllNotes()
             .observe(owner) {
                 val items = mutableListOf<RecyclerViewItem>()
-                val sortedNotes = sortNotes(it)
+                val sortedNotes = viewModel.sortNotes(it)
 
                 if (sortedNotes.isNotEmpty()) {
                     items.add(NoteItem(sortedNotes[0]))
@@ -61,7 +49,7 @@ class RecyclerViewWorker(
         viewModel.getAllNotes()
             .observe(owner) {
                 val items = mutableListOf<RecyclerViewItem>()
-                val sortedNotes = sortNotes(it)
+                val sortedNotes = viewModel.sortNotes(it)
 
                 sortedNotes.forEach { note -> items.add(NoteItem(note)) }
 
@@ -74,7 +62,7 @@ class RecyclerViewWorker(
             .observe(owner) {
                 if (query != null) {
                     val filteredItems = mutableListOf<RecyclerViewItem>()
-                    val sortedNotes = sortNotes(it)
+                    val sortedNotes = viewModel.sortNotes(it)
                     if (sortedNotes.isNotEmpty()) {
                         sortedNotes.forEach { note ->
                             if (note.situation.lowercase().contains(query)) {

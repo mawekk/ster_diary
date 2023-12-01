@@ -17,6 +17,7 @@ import com.mawekk.sterdiary.db.entities.Note
 import com.mawekk.sterdiary.db.entities.NoteEmotion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 
 open class DiaryViewModel(application: Application) : AndroidViewModel(application) {
     private val noteDao: NoteDao
@@ -208,5 +209,15 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
 
     fun getEmotionsCount(): Int {
         return emotionDao.getEmotionsCount()
+    }
+
+    fun sortNotes(notes: List<Note>): List<Note> {
+        return notes.sortedBy { note ->
+            val dateAndTimeString = note.date + ' ' + note.time
+            val formatter = SimpleDateFormat("dd MMMM yyyy HH:mm")
+            val dateAndTime = formatter.parse(dateAndTimeString)
+
+            dateAndTime
+        }
     }
 }

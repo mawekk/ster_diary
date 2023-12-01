@@ -1,14 +1,24 @@
 package com.mawekk.sterdiary.fragments
 
+import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
+import android.icu.util.Calendar
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.mawekk.sterdiary.ExportWorker
 import com.mawekk.sterdiary.MainActivity
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.STRUCTURE
@@ -16,13 +26,20 @@ import com.mawekk.sterdiary.TAG
 import com.mawekk.sterdiary.THEME
 import com.mawekk.sterdiary.databinding.FragmentSettingsBinding
 import com.mawekk.sterdiary.db.DiaryViewModel
-
+import java.text.SimpleDateFormat
 
 
 class SettingsFragment : Fragment() {
     private lateinit var binding: FragmentSettingsBinding
     private lateinit var boxes: List<CheckBox>
     private val viewModel: DiaryViewModel by activityViewModels()
+    private val calendar = Calendar.getInstance()
+    private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
+    private lateinit var dialogLayout: View
+    private lateinit var startText: TextView
+    private lateinit var endText: TextView
+    private lateinit var button: Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -32,9 +49,18 @@ class SettingsFragment : Fragment() {
             boxes = listOf(levelBox, feelingsBox, actionsBox, answerBox)
         }
 
+        dialogLayout = layoutInflater.inflate(
+            R.layout.export,
+            null
+        )
+        startText = dialogLayout.findViewById(R.id.startText)
+        endText = dialogLayout.findViewById(R.id.endText)
+        button = dialogLayout.findViewById(R.id.exportNotesButton)
+
         setSavedSettings()
         setTopAppBarActions()
         setEditEmotionsButton()
+        setExportButton()
         return binding.root
     }
 
@@ -113,6 +139,108 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    private fun setExportButton() {
+        binding.exportButton.setOnClickListener {
+            showExportDialog()
+        }
+    }
+
+    private fun showExportDialog() {
+        val builder = AlertDialog.Builder(activity)
+        builder.setView(dialogLayout)
+        builder.setTitle(R.string.export_notes)
+        val dialog = builder.create()
+
+        setDefaultDates()
+
+        startText.setOnClickListener { showDatePickerDialog(it as TextView) }
+        endText.setOnClickListener { showDatePickerDialog(it as TextView) }
+        button.setOnClickListener { if(exportNotes()) {
+            dialog.dismiss()
+        }
+        }
+
+        dialog.setOnShowListener {
+            val titleId = resources.getIdentifier("alertTitle", "id", "android")
+            val dialogTitle = dialog.findViewById<View>(titleId) as TextView
+            dialogTitle.setTextColor(
+                ContextCompat.getColor(
+                    activity as MainActivity,
+                    R.color.dark_blue
+                )
+            )
+        }
+        dialog.show()
+    }
+
+    private fun showDatePickerDialog(textView: TextView) {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val dateSetListener =
+            DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
+                calendar.set(Calendar.YEAR, selectedYear)
+                calendar.set(Calendar.MONTH, selectedMonth)
+                calendar.set(Calendar.DAY_OF_MONTH, selectedDay)
+                textView.text = dateFormat.format(calendar.time)
+            }
+
+        DatePickerDialog(
+            requireContext(),
+            R.style.Dialog_Theme,
+            dateSetListener,
+            year,
+            month,
+            day
+        ).show()
+
+    }
+
+    private fun setDefaultDates() {
+        val endDefault = dateFormat.format(System.currentTimeMillis())
+        endText.text = endDefault
+        viewModel.getAllNotes()
+            .observe(viewLifecycleOwner) {
+                val sortedNotes = viewModel.sortNotes(it)
+                var startDefault = endDefault
+                if (sortedNotes.isNotEmpty()) {
+                    startDefault = sortedNotes[0].date
+                }
+                startText.text = startDefault
+            }
+    }
+
+    private fun exportNotes(): Boolean {
+        val startDate = dateFormat.parse(startText.text.toString())
+        val endDate = dateFormat.parse(endText.text.toString())
+
+        if (startDate > endDate) {
+            setDefaultDates()
+            Toast.makeText(
+                requireContext(),
+                R.string.incorrect_period,
+                Toast.LENGTH_SHORT
+            )
+                .show()
+            return false
+        } else {
+            val exportWorker =
+                ExportWorker(startDate, endDate, viewModel, viewLifecycleOwner, requireContext())
+            val uri = FileProvider.getUriForFile(
+                requireContext(),
+                requireContext().applicationContext.packageName + ".provider",
+                exportWorker.exportToCSV()
+            )
+            val shareIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_STREAM, uri)
+                type = "text/csv"
+            }
+            startActivity(Intent.createChooser(shareIntent, null))
+            return true
+        }
+    }
 
     companion object {
         @JvmStatic
