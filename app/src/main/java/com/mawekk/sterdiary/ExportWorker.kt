@@ -4,11 +4,24 @@ import android.content.Context
 import android.os.Environment
 import androidx.lifecycle.LifecycleOwner
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
+import com.itextpdf.io.font.PdfEncodings
+import com.itextpdf.kernel.font.PdfFont
+import com.itextpdf.kernel.font.PdfFontFactory
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfWriter
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.element.Cell
+import com.itextpdf.layout.element.Paragraph
+import com.itextpdf.layout.element.Table
+import com.itextpdf.layout.property.TextAlignment
+import com.itextpdf.layout.property.UnitValue
 import com.mawekk.sterdiary.db.DiaryViewModel
+import com.mawekk.sterdiary.db.entities.Emotion
 import com.mawekk.sterdiary.db.entities.Note
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
+
 
 class ExportWorker(
     private val startDate: Date,
@@ -19,7 +32,21 @@ class ExportWorker(
 ) {
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val fileName =
-            dateFormat.format(System.currentTimeMillis()).replace(" ", "_")
+        "STERDiaryNotes_${dateFormat.format(startDate)}-${dateFormat.format(endDate)}".replace(" ", "_")
+    private val res = context.resources
+    private val headers = listOf(
+        res.getString(R.string.date),
+        res.getString(R.string.time),
+        res.getString(R.string.situation),
+        res.getString(R.string.discomfort_before).dropLast(1),
+        res.getString(R.string.thoughts),
+        res.getString(R.string.emotions).dropLast(1),
+        res.getString(R.string.feelings),
+        res.getString(R.string.actions),
+        res.getString(R.string.distortions).dropLast(1),
+        res.getString(R.string.answer),
+        res.getString(R.string.discomfort_after).dropLast(1)
+    )
 
     private fun getNotesToExport(notes: List<Note>): MutableList<Note> {
         val notesToExport = mutableListOf<Note>()
@@ -43,39 +70,61 @@ class ExportWorker(
 
     fun exportToCSV(): File {
         val file = getFile("$fileName.csv")
-        val res = context.resources
 
         viewModel.getAllNotes().observe(owner) {
             val notes = getNotesToExport(it)
 
-            val headers = listOf(
-                res.getString(R.string.date),
-                res.getString(R.string.time),
-                res.getString(R.string.situation),
-                res.getString(R.string.discomfort_before),
-                res.getString(R.string.thoughts),
-                res.getString(R.string.emotions).dropLast(1),
-                res.getString(R.string.distortions).dropLast(1),
-                res.getString(R.string.discomfort_after)
-            )
-
             csvWriter().open(file) {
                 writeRow(headers)
                 notes.forEach { note ->
-                    writeRow(noteToList(note))
+                    val emotions = viewModel.getNoteEmotionsById(note.id).value ?: emptyList()
+                    writeRow(noteToList(note, emotions))
                 }
             }
         }
-
         return file
     }
 
-    private fun noteToList(note: Note): List<String> {
-        var emotionsString = ""
-        viewModel.getNoteEmotionsById(note.id).value?.forEach {
-            emotionsString += it.name + " "
+    fun exportToPDF(): File {
+        val file = getFile("$fileName.pdf")
+
+        viewModel.getAllNotes().observe(owner) {
+            val notes = getNotesToExport(it)
+
+            val font: PdfFont =
+                PdfFontFactory.createFont("/assets/Arial.ttf", PdfEncodings.IDENTITY_H)
+            val pdfDocument = PdfDocument(PdfWriter(file))
+            val document = Document(pdfDocument)
+            document.setFont(font).setFontSize(6f)
+
+            val table = Table(11).useAllAvailableWidth()
+
+            headers.forEach { header ->
+                table.addHeaderCell(
+                    Cell().add(
+                        Paragraph(header).setTextAlignment(TextAlignment.CENTER).setBold()
+                    )
+                )
+            }
+            notes.forEach { note ->
+                val emotions = viewModel.getNoteEmotionsById(note.id).value ?: emptyList()
+                noteToList(note, emotions).forEach { elem ->
+                    table.addCell(Cell().add(Paragraph(elem).setTextAlignment(TextAlignment.LEFT)))
+
+                }
+            }
+
+            document.add(table)
+            document.close()
         }
-        emotionsString.dropLast(1)
+        return file
+    }
+
+    private fun noteToList(note: Note, emotions: List<Emotion>): List<String> {
+        var emotionsString = ""
+        emotions.forEach {
+            emotionsString += it.name + "\n"
+        }
 
         note.apply {
             return listOf(
@@ -85,7 +134,10 @@ class ExportWorker(
                 discomfortBefore,
                 thoughts,
                 emotionsString,
-                distortions,
+                feelings,
+                actions,
+                distortions.replace(";", "\n"),
+                answer,
                 discomfortAfter
             )
         }

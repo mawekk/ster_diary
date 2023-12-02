@@ -35,6 +35,9 @@ interface NoteDao {
     @Query("SELECT name FROM note_emotion_table WHERE note_id = :id")
     fun getNoteEmotionsById(id: Long): LiveData<List<Emotion>>
 
+    @Query("SELECT name FROM note_emotion_table WHERE note_id = :id")
+    fun getEmotionsForExport(id: Long): List<Emotion>
+
     @Query("DELETE FROM note_emotion_table WHERE note_id = :id")
     fun deleteNoteEmotionsById(id: Long)
 

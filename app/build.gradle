@@ -60,4 +60,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     implementation "app.futured.donut:donut:2.2.3"
     implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.2'
+    implementation 'com.itextpdf:itext7-core:7.1.11'
 }

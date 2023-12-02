@@ -220,4 +220,8 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
             dateAndTime
         }
     }
+
+    fun getEmotionsForExport(id: Long): List<Emotion> {
+        return noteDao.getEmotionsForExport(id)
+    }
 }

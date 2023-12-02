@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
@@ -37,8 +38,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/textInputLayout"
             app:layout_constraintTop_toBottomOf="@+id/textView12"
-            app:layout_constraintVertical_bias="0.0"
-            android:layout_marginTop="16dp">
+            app:layout_constraintVertical_bias="0.00999999">
 
         <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/startText"
@@ -95,31 +95,50 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:textSize="16sp" />
 
-    <RadioButton
-            android:id="@+id/systemTheme2"
+    <RadioGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:text="@string/csv"
-            android:textColor="@color/dark_blue"
-            android:textSize="14sp"
-            android:theme="@style/CheckBox.Theme"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView14"
-            android:checked="true"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:id="@+id/radioGroup">
+
+        <RadioButton
+                android:id="@+id/csvButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/csv"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme"
+                android:checked="true"
+                android:layout_marginEnd="64dp" />
+
+        <RadioButton
+                android:id="@+id/pdfButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:text="@string/pdf"
+                android:textColor="@color/dark_blue"
+                android:textSize="14sp"
+                android:theme="@style/CheckBox.Theme" />
+    </RadioGroup>
 
     <Button
             android:id="@+id/exportNotesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:backgroundTint="@color/green"
             android:text="@string/export_button"
             android:textColor="@color/dark_blue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
-            app:layout_constraintTop_toBottomOf="@+id/systemTheme2" />
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup"
+            android:backgroundTint="@color/green"
+            android:layout_marginTop="8dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

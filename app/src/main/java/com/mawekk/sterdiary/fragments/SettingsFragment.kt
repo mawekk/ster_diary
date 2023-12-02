@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -35,10 +36,6 @@ class SettingsFragment : Fragment() {
     private val viewModel: DiaryViewModel by activityViewModels()
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
-    private lateinit var dialogLayout: View
-    private lateinit var startText: TextView
-    private lateinit var endText: TextView
-    private lateinit var button: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,24 +46,23 @@ class SettingsFragment : Fragment() {
             boxes = listOf(levelBox, feelingsBox, actionsBox, answerBox)
         }
 
-        dialogLayout = layoutInflater.inflate(
-            R.layout.export,
-            null
-        )
-        startText = dialogLayout.findViewById(R.id.startText)
-        endText = dialogLayout.findViewById(R.id.endText)
-        button = dialogLayout.findViewById(R.id.exportNotesButton)
-
         setSavedSettings()
         setTopAppBarActions()
         setEditEmotionsButton()
         setExportButton()
+        setCreatePinButton()
         return binding.root
     }
 
     override fun onPause() {
         super.onPause()
         saveChanges()
+    }
+
+    private fun setCreatePinButton() {
+        binding.createPINButton.setOnClickListener {
+            (activity as MainActivity).showFragment(PinCodeFragment.newInstance(), R.id.pin_text)
+        }
     }
 
     private fun setSavedSettings() {
@@ -147,17 +143,27 @@ class SettingsFragment : Fragment() {
 
     private fun showExportDialog() {
         val builder = AlertDialog.Builder(activity)
+        val dialogLayout = layoutInflater.inflate(
+            R.layout.export,
+            null
+        )
         builder.setView(dialogLayout)
         builder.setTitle(R.string.export_notes)
         val dialog = builder.create()
 
-        setDefaultDates()
+        val startText = dialogLayout.findViewById<TextView>(R.id.startText)
+        val endText = dialogLayout.findViewById<TextView>(R.id.endText)
+        val button = dialogLayout.findViewById<Button>(R.id.exportNotesButton)
+        val radioGroup = dialogLayout.findViewById<RadioGroup>(R.id.radioGroup)
+
+        setDefaultDates(startText, endText)
 
         startText.setOnClickListener { showDatePickerDialog(it as TextView) }
         endText.setOnClickListener { showDatePickerDialog(it as TextView) }
-        button.setOnClickListener { if(exportNotes()) {
-            dialog.dismiss()
-        }
+        button.setOnClickListener {
+            if (exportNotes(startText, endText, radioGroup)) {
+                dialog.dismiss()
+            }
         }
 
         dialog.setOnShowListener {
@@ -197,7 +203,7 @@ class SettingsFragment : Fragment() {
 
     }
 
-    private fun setDefaultDates() {
+    private fun setDefaultDates(startText: TextView, endText: TextView) {
         val endDefault = dateFormat.format(System.currentTimeMillis())
         endText.text = endDefault
         viewModel.getAllNotes()
@@ -211,33 +217,43 @@ class SettingsFragment : Fragment() {
             }
     }
 
-    private fun exportNotes(): Boolean {
+    private fun exportNotes(startText: TextView, endText: TextView, radioGroup: RadioGroup): Boolean {
         val startDate = dateFormat.parse(startText.text.toString())
         val endDate = dateFormat.parse(endText.text.toString())
 
         if (startDate > endDate) {
-            setDefaultDates()
+            setDefaultDates(startText, endText)
             Toast.makeText(
                 requireContext(),
                 R.string.incorrect_period,
                 Toast.LENGTH_SHORT
             )
                 .show()
+
             return false
         } else {
             val exportWorker =
                 ExportWorker(startDate, endDate, viewModel, viewLifecycleOwner, requireContext())
+
+
+            val (file, format) = when (radioGroup.checkedRadioButtonId) {
+                R.id.csvButton -> Pair(exportWorker.exportToCSV(), "text/csv")
+                else -> Pair(exportWorker.exportToPDF(), "application/pdf")
+            }
+
             val uri = FileProvider.getUriForFile(
                 requireContext(),
                 requireContext().applicationContext.packageName + ".provider",
-                exportWorker.exportToCSV()
+                file
             )
+
             val shareIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_STREAM, uri)
-                type = "text/csv"
+                type = format
             }
             startActivity(Intent.createChooser(shareIntent, null))
+
             return true
         }
     }

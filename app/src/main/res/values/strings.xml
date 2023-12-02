@@ -57,6 +57,7 @@
     <string name="export_button">Экспортировать</string>
     <string name="format">Формат экспортируемого файла:</string>
     <string name="csv">CSV</string>
+    <string name="pdf">PDF</string>
     <string name="export_text">Выберите период, записи за который вы хотите экспортировать.
         По умолчанию экспортируются все записи.</string>
 
