@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreateOptionsMenu(binding.noteTopBar.menu)
+        setContentView(binding.root)
 
         val settings = getSharedPreferences(TAG, Context.MODE_PRIVATE)
         val pinCode = settings.getString(PIN_CODE, "") ?: ""
