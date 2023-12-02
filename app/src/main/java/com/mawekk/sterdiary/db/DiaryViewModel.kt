@@ -50,6 +50,10 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
         return noteDao.getAllNotes()
     }
 
+    suspend fun getAllNotesAsync(): List<Note> {
+        return noteDao.getAllNotesAsync()
+    }
+
     private fun addNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
             noteDao.addNote(note)
@@ -159,6 +163,10 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
         return noteDao.getNoteEmotionsById(id)
     }
 
+    suspend fun getNoteEmotionsByIdAsync(id: Long): List<Emotion> {
+        return noteDao.getNoteEmotionsByIdAsync(id)
+    }
+
     private fun deleteNoteEmotionsById(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             noteDao.deleteNoteEmotionsById(id)
@@ -219,9 +227,5 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
 
             dateAndTime
         }
-    }
-
-    fun getEmotionsForExport(id: Long): List<Emotion> {
-        return noteDao.getEmotionsForExport(id)
     }
 }

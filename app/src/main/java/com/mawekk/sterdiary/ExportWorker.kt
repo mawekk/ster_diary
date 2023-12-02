@@ -3,6 +3,7 @@ package com.mawekk.sterdiary
 import android.content.Context
 import android.os.Environment
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.viewModelScope
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.itextpdf.io.font.PdfEncodings
 import com.itextpdf.kernel.font.PdfFont
@@ -14,10 +15,11 @@ import com.itextpdf.layout.element.Cell
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
 import com.itextpdf.layout.property.TextAlignment
-import com.itextpdf.layout.property.UnitValue
 import com.mawekk.sterdiary.db.DiaryViewModel
 import com.mawekk.sterdiary.db.entities.Emotion
 import com.mawekk.sterdiary.db.entities.Note
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -27,12 +29,14 @@ class ExportWorker(
     private val startDate: Date,
     private val endDate: Date,
     private val viewModel: DiaryViewModel,
-    private val owner: LifecycleOwner,
     private val context: Context
 ) {
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
     private val fileName =
-        "STERDiaryNotes_${dateFormat.format(startDate)}-${dateFormat.format(endDate)}".replace(" ", "_")
+        "STERDiaryNotes_${dateFormat.format(startDate)}-${dateFormat.format(endDate)}".replace(
+            " ",
+            "_"
+        )
     private val res = context.resources
     private val headers = listOf(
         res.getString(R.string.date),
@@ -68,28 +72,36 @@ class ExportWorker(
         )
     }
 
-    fun exportToCSV(): File {
+    fun exportToCSV(sendAction: (File, String) -> Unit) {
         val file = getFile("$fileName.csv")
 
-        viewModel.getAllNotes().observe(owner) {
-            val notes = getNotesToExport(it)
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            val notes = getNotesToExport(viewModel.getAllNotesAsync())
+            val emotions = mutableMapOf<Note, List<Emotion>>()
+            notes.forEach { note ->
+                emotions[note] = viewModel.getNoteEmotionsByIdAsync(note.id)
+            }
 
             csvWriter().open(file) {
                 writeRow(headers)
                 notes.forEach { note ->
-                    val emotions = viewModel.getNoteEmotionsById(note.id).value ?: emptyList()
-                    writeRow(noteToList(note, emotions))
+                    writeRow(noteToList(note, emotions[note]!!))
                 }
             }
+
+            sendAction(file, "text/csv")
         }
-        return file
     }
 
-    fun exportToPDF(): File {
+    fun exportToPDF(sendAction: (File, String) -> Unit) {
         val file = getFile("$fileName.pdf")
 
-        viewModel.getAllNotes().observe(owner) {
-            val notes = getNotesToExport(it)
+        viewModel.viewModelScope.launch(Dispatchers.IO) {
+            val notes = getNotesToExport(viewModel.getAllNotesAsync())
+            val emotions = mutableMapOf<Note, List<Emotion>>()
+            notes.forEach { note ->
+                emotions[note] = viewModel.getNoteEmotionsByIdAsync(note.id)
+            }
 
             val font: PdfFont =
                 PdfFontFactory.createFont("/assets/Arial.ttf", PdfEncodings.IDENTITY_H)
@@ -107,8 +119,7 @@ class ExportWorker(
                 )
             }
             notes.forEach { note ->
-                val emotions = viewModel.getNoteEmotionsById(note.id).value ?: emptyList()
-                noteToList(note, emotions).forEach { elem ->
+                noteToList(note, emotions[note]!!).forEach { elem ->
                     table.addCell(Cell().add(Paragraph(elem).setTextAlignment(TextAlignment.LEFT)))
 
                 }
@@ -116,8 +127,9 @@ class ExportWorker(
 
             document.add(table)
             document.close()
+
+            sendAction(file, "application/pdf")
         }
-        return file
     }
 
     private fun noteToList(note: Note, emotions: List<Emotion>): List<String> {

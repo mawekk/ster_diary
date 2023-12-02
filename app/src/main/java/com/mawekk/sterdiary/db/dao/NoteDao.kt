@@ -19,6 +19,12 @@ interface NoteDao {
     @Delete
     suspend fun deleteNote(note: Note)
 
+    @Query("SELECT * FROM notes_table")
+    suspend fun getAllNotesAsync(): List<Note>
+
+    @Query("SELECT name FROM note_emotion_table WHERE note_id = :id")
+    suspend fun getNoteEmotionsByIdAsync(id: Long): List<Emotion>
+
     @Delete
     suspend fun deleteNoteEmotion(noteEmotion: NoteEmotion)
     @Query("SELECT * FROM notes_table")
@@ -34,9 +40,6 @@ interface NoteDao {
 
     @Query("SELECT name FROM note_emotion_table WHERE note_id = :id")
     fun getNoteEmotionsById(id: Long): LiveData<List<Emotion>>
-
-    @Query("SELECT name FROM note_emotion_table WHERE note_id = :id")
-    fun getEmotionsForExport(id: Long): List<Emotion>
 
     @Query("DELETE FROM note_emotion_table WHERE note_id = :id")
     fun deleteNoteEmotionsById(id: Long)

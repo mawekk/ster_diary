@@ -21,12 +21,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.mawekk.sterdiary.ExportWorker
 import com.mawekk.sterdiary.MainActivity
+import com.mawekk.sterdiary.PIN_CODE
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.STRUCTURE
 import com.mawekk.sterdiary.TAG
 import com.mawekk.sterdiary.THEME
 import com.mawekk.sterdiary.databinding.FragmentSettingsBinding
 import com.mawekk.sterdiary.db.DiaryViewModel
+import java.io.File
 import java.text.SimpleDateFormat
 
 
@@ -36,6 +38,21 @@ class SettingsFragment : Fragment() {
     private val viewModel: DiaryViewModel by activityViewModels()
     private val calendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd MMMM yyyy")
+
+    private val sender: ((File, String) -> Unit) = { file, format ->
+        val uri = FileProvider.getUriForFile(
+            requireContext(),
+            requireContext().applicationContext.packageName + ".provider",
+            file
+        )
+
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = format
+        }
+        startActivity(Intent.createChooser(shareIntent, null))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,15 +88,23 @@ class SettingsFragment : Fragment() {
         if (settings != null) {
             val theme = settings.getString(THEME, "system")
             val structure = mutableListOf<Boolean>()
+
             STRUCTURE.forEach {
                 structure.add(settings.getBoolean(it, true))
             }
+
             binding.apply {
+                if (settings.getString(PIN_CODE, "") != "") {
+                    createPINButton.isVisible = false
+                    changePINButton.isVisible = true
+                }
+
                 when (theme) {
                     "system" -> systemTheme.isChecked = true
                     "light" -> lightTheme.isChecked = true
                     "dark" -> darkTheme.isChecked = true
                 }
+
                 structure.forEachIndexed { index, value ->
                     boxes[index].isChecked = value
                 }
@@ -142,7 +167,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun showExportDialog() {
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity, R.style.Dialog_Theme)
         val dialogLayout = layoutInflater.inflate(
             R.layout.export,
             null
@@ -233,26 +258,14 @@ class SettingsFragment : Fragment() {
             return false
         } else {
             val exportWorker =
-                ExportWorker(startDate, endDate, viewModel, viewLifecycleOwner, requireContext())
+                ExportWorker(startDate, endDate, viewModel, requireContext())
 
-
-            val (file, format) = when (radioGroup.checkedRadioButtonId) {
-                R.id.csvButton -> Pair(exportWorker.exportToCSV(), "text/csv")
-                else -> Pair(exportWorker.exportToPDF(), "application/pdf")
+            when (radioGroup.checkedRadioButtonId) {
+                R.id.csvButton -> exportWorker.exportToCSV(sender)
+                else -> exportWorker.exportToPDF(sender)
             }
 
-            val uri = FileProvider.getUriForFile(
-                requireContext(),
-                requireContext().applicationContext.packageName + ".provider",
-                file
-            )
 
-            val shareIntent: Intent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, uri)
-                type = format
-            }
-            startActivity(Intent.createChooser(shareIntent, null))
 
             return true
         }

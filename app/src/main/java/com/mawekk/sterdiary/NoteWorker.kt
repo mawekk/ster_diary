@@ -183,7 +183,7 @@ class NoteWorker(
         boxes.map { if (it.isChecked) it.text.toString() else "#" }.filter { it != "#" }
 
     fun showBackDialog(dialogLayout: View) {
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity, R.style.Dialog_Theme)
         builder.setView(dialogLayout)
         builder.setTitle(R.string.back_dialog_title)
 
@@ -209,7 +209,7 @@ class NoteWorker(
     }
 
     fun showHelpDialog(dialogLayout: View) {
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity, R.style.Dialog_Theme)
         builder.setView(dialogLayout)
         builder.setTitle(R.string.help)
 
@@ -259,7 +259,7 @@ class NoteWorker(
     }
 
     fun showDeleteDialog(note: Note, dialogLayout: View) {
-        val builder = AlertDialog.Builder(activity)
+        val builder = AlertDialog.Builder(activity, R.style.Dialog_Theme)
         builder.setView(dialogLayout)
         builder.setTitle(R.string.delete_dialog_title)
 
