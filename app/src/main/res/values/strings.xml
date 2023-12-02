@@ -62,6 +62,9 @@
         По умолчанию экспортируются все записи.</string>
 
     <string name="enter_pin">Введите PIN-код</string>
+    <string name="create_pin">Придумайте PIN-код</string>
+    <string name="repeat_pin">Введите PIN-код ещë раз</string>
+    <string name="incorrect_pin">Неверный PIN-код</string>
 
     <string name="help_text">
         <b>ДАТА И ВРЕМЯ</b>\n

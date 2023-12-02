@@ -21,7 +21,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.mawekk.sterdiary.ExportWorker
 import com.mawekk.sterdiary.MainActivity
+import com.mawekk.sterdiary.PIN_CHANGE
 import com.mawekk.sterdiary.PIN_CODE
+import com.mawekk.sterdiary.PIN_CREATE
 import com.mawekk.sterdiary.R
 import com.mawekk.sterdiary.STRUCTURE
 import com.mawekk.sterdiary.TAG
@@ -67,7 +69,7 @@ class SettingsFragment : Fragment() {
         setTopAppBarActions()
         setEditEmotionsButton()
         setExportButton()
-        setCreatePinButton()
+        setPinButtons()
         return binding.root
     }
 
@@ -76,9 +78,23 @@ class SettingsFragment : Fragment() {
         saveChanges()
     }
 
-    private fun setCreatePinButton() {
-        binding.createPINButton.setOnClickListener {
-            (activity as MainActivity).showFragment(PinCodeFragment.newInstance(), R.id.pin_text)
+    private fun setPinButtons() {
+        val activity = activity as MainActivity
+        binding.apply {
+            createPINButton.setOnClickListener {
+                activity.apply {
+                    viewModel.changePinMode(PIN_CREATE)
+                    binding.settingsTopBar.isVisible = false
+                    showFragment(PinCodeFragment.newInstance(), R.id.pin_text)
+                }
+            }
+            changePINButton.setOnClickListener {
+                activity.apply {
+                    viewModel.changePinMode(PIN_CHANGE)
+                    binding.settingsTopBar.isVisible = false
+                    showFragment(PinCodeFragment.newInstance(), R.id.pin_text)
+                }
+            }
         }
     }
 
@@ -242,7 +258,11 @@ class SettingsFragment : Fragment() {
             }
     }
 
-    private fun exportNotes(startText: TextView, endText: TextView, radioGroup: RadioGroup): Boolean {
+    private fun exportNotes(
+        startText: TextView,
+        endText: TextView,
+        radioGroup: RadioGroup
+    ): Boolean {
         val startDate = dateFormat.parse(startText.text.toString())
         val endDate = dateFormat.parse(endText.text.toString())
 

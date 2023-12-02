@@ -1,11 +1,13 @@
 package com.mawekk.sterdiary
 
+import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -13,8 +15,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.google.android.material.textfield.TextInputEditText
 import com.mawekk.sterdiary.databinding.ActivityMainBinding
+import com.mawekk.sterdiary.db.DiaryViewModel
 import com.mawekk.sterdiary.fragments.ArchiveFragment
 import com.mawekk.sterdiary.fragments.NewNoteFragment
+import com.mawekk.sterdiary.fragments.PinCodeFragment
 import com.mawekk.sterdiary.fragments.SearchFragment
 import com.mawekk.sterdiary.fragments.SettingsFragment
 import com.mawekk.sterdiary.fragments.StatisticsFragment
@@ -25,13 +29,26 @@ import java.util.Stack
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private val idStack = Stack<Int>()
+    private val viewModel: DiaryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreateOptionsMenu(binding.noteTopBar.menu)
-        setContentView(binding.root)
-        showFragment(ArchiveFragment.newInstance(), R.id.archive_item)
+
+        val settings = getSharedPreferences(TAG, Context.MODE_PRIVATE)
+        val pinCode = settings.getString(PIN_CODE, "") ?: ""
+
+        if (pinCode.isNotEmpty()) {
+            hideBottomNavigation()
+            binding.topAppBar.isVisible = false
+            viewModel.changePinMode(PIN_ENTER)
+            showFragment(PinCodeFragment.newInstance(), R.id.pin_text)
+            idStack.pop()
+        } else {
+            showFragment(ArchiveFragment.newInstance(), R.id.archive_item)
+        }
+
         setBottomBarNavigation()
         setTopBarNavigation()
     }
@@ -90,6 +107,11 @@ class MainActivity : AppCompatActivity() {
                     binding.noteTopBar.isVisible = true
                     binding.editNoteTopBar.isVisible = false
                 }
+
+                R.id.pin_text ->
+                    if (idStack.peek() == R.id.topAppBar) {
+                        binding.settingsTopBar.isVisible = true
+                    }
             }
         } else {
             finish()
@@ -131,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showBottomNavigation() {
+    fun showBottomNavigation() {
         binding.apply {
             bottomNavigation.isVisible = true
             bottomShadow.isVisible = true

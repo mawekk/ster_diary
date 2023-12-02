@@ -28,9 +28,11 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
     private val mutableSelectedEmotions = MutableLiveData<List<Emotion>>()
     private val mutableEditMode = MutableLiveData(false)
     private val mutableLoadMode = MutableLiveData(false)
+    private val mutablePinMode = MutableLiveData<String>()
     val selectedEmotions: LiveData<List<Emotion>> get() = mutableSelectedEmotions
     val editMode: LiveData<Boolean> get() = mutableEditMode
     val loadMode: LiveData<Boolean> get() = mutableLoadMode
+    val pinMode: LiveData<String> get() = mutablePinMode
 
     init {
         val app = application as DiaryApp
@@ -44,6 +46,10 @@ open class DiaryViewModel(application: Application) : AndroidViewModel(applicati
 
     fun selectNote(note: Note) {
         mutableSelectedNote.value = note
+    }
+
+    fun changePinMode(value: String) {
+        mutablePinMode.value = value
     }
 
     fun getAllNotes(): LiveData<List<Note>> {
