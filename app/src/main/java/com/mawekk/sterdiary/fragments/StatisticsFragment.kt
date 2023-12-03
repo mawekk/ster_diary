@@ -91,8 +91,10 @@ class StatisticsFragment : Fragment() {
         var sum = 0f
         distortionsNames.forEachIndexed { i, name ->
             val amount = results[name]!!.toFloat()
-            sections.add(DonutSection(name, colors[i], amount))
-            sum += amount
+            if (amount > 0) {
+                sections.add(DonutSection(name, colors[i], amount))
+                sum += amount
+            }
         }
 
         binding.distorionsDonut.apply {
@@ -146,8 +148,10 @@ class StatisticsFragment : Fragment() {
         var sum = 0f
         emotionsTop.forEachIndexed { i, pair ->
             val amount = pair.second.toFloat()
-            sections.add(DonutSection(pair.first, colors[i + 2], amount))
-            sum += amount
+            if (amount > 0) {
+                sections.add(DonutSection(pair.first, colors[i + 2], amount))
+                sum += amount
+            }
         }
 
         binding.emotionsDonut.apply {
