@@ -88,7 +88,7 @@ class PinCodeFragment : Fragment() {
                         R.color.gray
                     ), android.graphics.PorterDuff.Mode.SRC_IN
                 )
-                binding.pinText.text = pinCode
+                pinCode = pinCode.dropLast(1)
             }
         }
     }
