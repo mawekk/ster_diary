@@ -281,8 +281,8 @@ class SettingsFragment : Fragment() {
                 ExportWorker(startDate, endDate, viewModel, requireContext())
 
             when (radioGroup.checkedRadioButtonId) {
-                R.id.csvButton -> exportWorker.exportToCSV(sender)
-                else -> exportWorker.exportToPDF(sender)
+                R.id.csvButton -> sender(exportWorker.exportToCSV(), "text/csv")
+                else -> sender(exportWorker.exportToPDF(), "application/pdf")
             }
 
 

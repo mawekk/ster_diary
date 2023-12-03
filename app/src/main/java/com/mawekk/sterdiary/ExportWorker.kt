@@ -2,7 +2,6 @@ package com.mawekk.sterdiary
 
 import android.content.Context
 import android.os.Environment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.itextpdf.io.font.PdfEncodings
@@ -72,7 +71,7 @@ class ExportWorker(
         )
     }
 
-    fun exportToCSV(sendAction: (File, String) -> Unit) {
+    fun exportToCSV(): File {
         val file = getFile("$fileName.csv")
 
         viewModel.viewModelScope.launch(Dispatchers.IO) {
@@ -88,12 +87,11 @@ class ExportWorker(
                     writeRow(noteToList(note, emotions[note]!!))
                 }
             }
-
-            sendAction(file, "text/csv")
         }
+        return file
     }
 
-    fun exportToPDF(sendAction: (File, String) -> Unit) {
+    fun exportToPDF(): File{
         val file = getFile("$fileName.pdf")
 
         viewModel.viewModelScope.launch(Dispatchers.IO) {
@@ -127,9 +125,8 @@ class ExportWorker(
 
             document.add(table)
             document.close()
-
-            sendAction(file, "application/pdf")
         }
+        return file
     }
 
     private fun noteToList(note: Note, emotions: List<Emotion>): List<String> {
